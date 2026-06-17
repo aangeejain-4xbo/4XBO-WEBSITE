@@ -10,7 +10,7 @@ Marketing/landing site for **4X BackOffice**, a B2B Forex back-office solutions 
 
 ```bash
 npm install          # install deps
-npm run dev          # tsx server.ts — Express + Vite middleware on http://localhost:3000
+npm run dev          # tsx server.ts — Express + Vite middleware on http://localhost:3535 (PORT env var overrides)
 npm run build        # vite build (client → dist/) + esbuild bundles server.ts → dist/server.cjs
 npm start            # node dist/server.cjs — serves prebuilt dist/ as a static SPA
 npm run lint         # tsc --noEmit (type-check only; no ESLint configured)
@@ -19,9 +19,9 @@ npm run clean        # rm -rf dist server.js  (note: uses Unix rm; on Windows us
 
 There is **no test framework**. `npm run lint` (type-check) is the only automated check.
 
-Dev and prod both run through `server.ts` on port 3000 (`0.0.0.0`) — in dev it mounts Vite as middleware (`NODE_ENV !== "production"`); in prod it serves `dist/` statically with an SPA fallback to `index.html`. Running `vite` directly is not the intended workflow.
+Dev and prod both run through `server.ts`, which listens on `0.0.0.0:${PORT}` — default `3535`, overridable via the `PORT` env var (`parseInt(process.env.PORT || "3535")`). In dev it mounts Vite as middleware (`NODE_ENV !== "production"`); in prod it serves `dist/` statically with an SPA fallback to `index.html`. Running `vite` directly is not the intended workflow.
 
-**Two divergent deployment paths.** `npm start`/`npm run build` use `server.ts` (Express). But `vercel.json` deploys with `vite build` only (framework `vite`, static SPA rewrites) — **`server.ts` never runs on Vercel**, so the dynamic `/robots.txt` and `/sitemap.xml` it serves are absent there. If SEO routes must work on Vercel, they need a static/serverless equivalent. Keep the hardcoded sitemap in `server.ts` and any Vercel config in sync when routes change.
+**Two divergent deployment paths.** `npm start`/`npm run build` use `server.ts` (Express). But `vercel.json` deploys with `vite build` only (framework `vite`, static SPA rewrites) — **`server.ts` never runs on Vercel**. On Vercel the SEO files are served instead from `public/robots.txt` and `public/sitemap.xml` (Vite copies `public/` into `dist/` verbatim). So `/robots.txt` and `/sitemap.xml` have **two sources of truth**: the dynamic Express routes in `server.ts` (used by `npm start`) and the static files in `public/` (used by Vercel and by any static `dist/` serve). They currently duplicate the same content — keep them in sync.
 
 ## Architecture
 
@@ -33,7 +33,7 @@ Dev and prod both run through `server.ts` on port 3000 (`0.0.0.0`) — in dev it
 
 **Code-splitting.** The heaviest views are lazy-loaded to keep the initial bundle small: `Services` (the Three.js/WebGL route) in `src/App.tsx`, and `ContactGlobe` (the 3D globe) in `ContactSection.tsx`. Both use `React.lazy` + `Suspense`. Keep new heavy/3D components lazy.
 
-**SEO is managed imperatively in `src/App.tsx`.** A `useEffect` keyed on `currentPath` rewrites `document.title`, meta description/keywords, Open Graph tags, canonical link, and an injected JSON-LD `<script id="structured-data-schema">` per route. `index.html` holds the initial/default tags. `server.ts` *also* dynamically serves `/robots.txt` and `/sitemap.xml` — the sitemap is a **hardcoded** route list in `server.ts` (there are no static `robots.txt`/`sitemap.xml` in `public/`). When adding a page, update route lists in **both** `src/App.tsx` (the `switch` and SEO `useEffect`) and `server.ts` (the sitemap).
+**SEO is managed imperatively in `src/App.tsx`.** A `useEffect` keyed on `currentPath` rewrites `document.title`, meta description/keywords, Open Graph tags, canonical link, and an injected JSON-LD `<script id="structured-data-schema">` per route. `index.html` holds the initial/default tags. The sitemap exists as **three hardcoded route lists that must agree**: `src/App.tsx` (the `renderContent` `switch` + SEO `useEffect`), the inline route list in `server.ts`'s `/sitemap.xml` route, and the static `public/sitemap.xml`. When adding a page, update **all three** (and `public/robots.txt` references `https://4xbo.com/sitemap.xml`). The canonical/OG base URL is `https://4xbo.com`.
 
 **Scroll-reveal animations** use a global IntersectionObserver in `src/App.tsx` that adds the `.in` class to any element with a `data-rv` attribute (CSS `transition-delay` via `data-rv-delay` handles staggering). The observer re-runs on route change and after the loader completes. Shared Framer Motion variants live in `src/lib/animations.ts` (`TRANSITIONS`, `ANIMATION_VARIANTS`, `POST_REVEAL`).
 
