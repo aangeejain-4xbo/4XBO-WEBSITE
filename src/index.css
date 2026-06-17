@@ -1,0 +1,337 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-gold-50: #fffef2;
+  --color-gold-100: #fef8dd;
+  --color-gold-200: #fde8ad;
+  --color-gold-300: #ebd076;
+  --color-gold-400: #e2b949;
+  --color-gold-500: #d4a02a;
+  --color-gold-600: #b0811e;
+  --color-gold-700: #896013;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .cinematic-reveal {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+  }
+  /* Unified premium card hover: lift + gold border + gold glow */
+  .glow-card {
+    transition: transform 0.35s var(--ease-out-expo), border-color 0.35s ease,
+      box-shadow 0.35s ease, background-color 0.35s ease;
+  }
+  .glow-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(212, 160, 42, 0.5) !important;
+    background-color: rgba(212, 160, 42, 0.04);
+    box-shadow: 0 14px 44px rgba(0, 0, 0, 0.55),
+      0 0 30px rgba(212, 160, 42, 0.22), inset 0 1px 0 rgba(255, 217, 0, 0.15);
+  }
+}
+
+/* Custom radial glows & overlays */
+.gold-glow-radial {
+  background: radial-gradient(circle 400px at 50% 50%, rgba(202, 162, 96, 0.12), transparent 80%);
+}
+
+.gold-glow-strong {
+  background: radial-gradient(circle 600px at 50% 30%, rgba(202, 162, 96, 0.18), transparent 70%);
+}
+
+/* Premium micro-grid overlay with 48px sizing for high-end look */
+.grid-bg-overlay {
+  background-size: 48px 48px;
+  background-image: linear-gradient(to right, rgba(202, 162, 96, 0.018) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(202, 162, 96, 0.018) 1px, transparent 1px);
+}
+
+/* Authentic physical noise overlay using SVG filter - highly optimized and GPU-rendered */
+.premium-noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.018'/%3E%3C/svg%3E");
+}
+
+/* Cohesive enterprise background template */
+.premium-fintech-bg {
+  background-color: #030303;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(202, 162, 96, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 100% 35%, rgba(202, 162, 96, 0.03) 0%, transparent 35%),
+    radial-gradient(circle at 0% 75%, rgba(202, 162, 96, 0.04) 0%, transparent 40%);
+}
+
+/* Advanced text shadow glow algorithms for luxury brand feels */
+.text-glow-gold {
+  text-shadow: 0 0 14px rgba(255, 217, 0, 0.5), 0 0 34px rgba(212, 160, 42, 0.3);
+}
+
+.text-glow-light {
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.22), 0 0 30px rgba(212, 160, 42, 0.15);
+}
+
+/* Reusable gold halo for accents/icons */
+.gold-glow-soft {
+  filter: drop-shadow(0 0 6px rgba(212, 160, 42, 0.45));
+}
+
+/* Custom scrollbar matching styling guidelines */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(202, 162, 96, 0.3);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(202, 162, 96, 0.5);
+}
+
+/* Base64 Logo Hover Animation */
+.logo-img {
+  transition: opacity 0.3s ease;
+}
+.logo-img:hover {
+  opacity: 0.85;
+}
+
+/* Metallic Gold shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    #d4a02a 0%,
+    #e2b949 20%,
+    #fffef2 40%,
+    #e2b949 60%,
+    #d4a02a 80%,
+    #d4a02a 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 5s linear infinite;
+}
+
+/* Infinite scrolling marquee ticker */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+/* Staggered scroll-reveal delays */
+[data-rv] {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: transform, opacity;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-rv].in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animated border shimmer on CTA card using CSS mask */
+@keyframes borderShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.cta-shimmer-border {
+  position: relative;
+}
+
+.cta-shimmer-border::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  padding: 1.5px; /* Border thickness */
+  background: linear-gradient(110deg, #d4a02a 0%, #fde8ad 25%, #ffffff 50%, #fde8ad 75%, #b0811e 100%);
+  background-size: 200% auto;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: borderShimmer 5s linear infinite;
+}
+
+/* Bento Card Spotlight interaction style mappings */
+.bx {
+  position: relative;
+}
+
+.bx::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(212, 175, 55, 0.06), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out-expo);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bx:hover::before {
+  opacity: 1;
+}
+
+/* Staggered Scroll Reveal Multipliers */
+[data-rv][data-rv-delay="1"].in { transition-delay: .04s; }
+[data-rv][data-rv-delay="2"].in { transition-delay: .08s; }
+[data-rv][data-rv-delay="3"].in { transition-delay: .12s; }
+[data-rv][data-rv-delay="4"].in { transition-delay: .16s; }
+[data-rv][data-rv-delay="5"].in { transition-delay: .2s; }
+
+/* Step interactions inside the processes section */
+.step {
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.step .n {
+  transition: transform 0.35s var(--ease-spring);
+}
+
+.step:hover .n {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.step h4 {
+  transition: color 0.3s ease;
+}
+
+.step:hover h4 {
+  color: #D4AF37;
+}
+
+/* Brand logo rotation pulse & keyframes */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(212, 175, 55, 0.45), 0 0 46px rgba(212, 175, 55, 0.2);
+  }
+}
+
+.mk {
+  animation: pulse-glow 3s ease-in-out infinite;
+  transition: transform 0.5s var(--ease-spring) !important;
+}
+
+.brand:hover .mk {
+  transform: rotate(225deg) !important;
+}
+
+/* Testimonial diagonal hover shimmer layout */
+.qt {
+  position: relative;
+}
+
+.qt::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), transparent 40%, transparent 60%, rgba(212, 175, 55, 0.06));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.qt:hover::after {
+  opacity: 1;
+}
+
+/* Drift lines for Parallax backgrounds and headers */
+.ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.gline {
+  position: absolute;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.12), transparent);
+  animation: gline-drift 6s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.gline:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.gline:nth-child(2) {
+  animation-delay: 2s;
+}
+
+.gline:nth-child(3) {
+  animation-delay: 4s;
+}
+
+@keyframes gline-drift {
+  0% {
+    transform: scaleY(1) translateY(0);
+  }
+  100% {
+    transform: scaleY(1.2) translateY(-12px);
+  }
+}
+
+
+

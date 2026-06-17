@@ -1,0 +1,6 @@
+{
+  "name": "4X BackOffice",
+  "description": "Empowering Forex Brokers with Advanced Back Office Solutions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
