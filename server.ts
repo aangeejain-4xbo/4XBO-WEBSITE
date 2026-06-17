@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = parseInt(process.env.PORT || "3000", 10);
+const PORT = parseInt(process.env.PORT || "3535", 10);
 
 // ---------------------- TECHNICAL SEO SITEMAP & ROBOTS ----------------------
 
