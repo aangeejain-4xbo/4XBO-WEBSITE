@@ -5,7 +5,7 @@ import { TRANSITIONS, ANIMATION_VARIANTS } from "../lib/animations";
 
 export const Mission: React.FC = () => {
   return (
-    <section id="mission" className="relative py-24 bg-[#080808] overflow-hidden px-4">
+    <section id="mission" className="relative py-14 sm:py-20 md:py-24 bg-[#080808] overflow-hidden px-4">
       {/* Background radial gold glow */}
       <div className="absolute top-1/2 left-1/3 h-96 w-96 rounded-full bg-gold-400/5 blur-[120px] pointer-events-none" />
 

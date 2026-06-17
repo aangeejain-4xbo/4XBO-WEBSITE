@@ -3,35 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Dark base background so there is no white flash before the app mounts -->
+    <style>html,body{background-color:#050505;margin:0;}</style>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/logo-mark.png" />
     <link rel="apple-touch-icon" href="/logo-mark.png" />
-    <title>B2B Forex Back Office Solutions | MT5 Admin & Server Management | 4X BackOffice</title>
-    <meta name="description" content="4X BackOffice is a premier B2B Forex back office solutions provider for global brokers. Specialized in MT5 administration, high-performance server management, PrimeXM/Centroid bridge integrations, and premium risk management infrastructure." />
-    <meta name="keywords" content="Forex back office, MT5 admin, server management, bridge integrations, gateway integrations, risk management, data protection, trade analysis, platform security, PrimeXM, Centroid Solutions, Tools for Brokers, B2B fintech, forex technology" />
+    <title>Forex Back Office & MetaTrader MT5 Management | 4X BackOffice</title>
+    <meta name="description" content="MetaTrader MT4/MT5 management & forex back office solutions for brokers — low-latency trading servers, liquidity bridges, smart order routing & risk management." />
+    <meta name="keywords" content="forex back office solutions, MetaTrader management, MT5 administration, MT4 management, MetaTrader server management, forex trading technology, forex trading infrastructure, liquidity bridges, STP aggregation, smart order routing, broker risk management, A-book B-book, broker technology provider, PrimeXM, Centroid Solutions, Tools for Brokers" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="4X BackOffice" />
     <meta property="og:url" content="https://4xbo.com/" />
-    <meta property="og:title" content="B2B Forex Back Office Solutions | MT5 Admin & Server Management | 4X BackOffice" />
-    <meta property="og:description" content="Professional B2B broker infrastructure. Featuring MT5 admin, server hosting, secure gateways, and robust platform security with global operations in Dubai, HK, Singapore, and London." />
+    <meta property="og:title" content="Forex Back Office & MetaTrader MT5 Management | 4X BackOffice" />
+    <meta property="og:description" content="MetaTrader MT4/MT5 management & forex back office solutions for brokers — low-latency trading servers, liquidity bridges, smart order routing & risk management." />
     <meta property="og:image" content="https://4xbo.com/logo-og.png" />
+    <meta property="og:image:secure_url" content="https://4xbo.com/logo-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="4X BackOffice — B2B Forex Back Office Solutions" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://4xbo.com/" />
-    <meta property="twitter:title" content="B2B Forex Back Office Solutions | 4X BackOffice" />
-    <meta property="twitter:description" content="Streamline your brokerage operations with premium MT5 administrative setups, server management, and advanced liquidity bridges." />
+    <meta property="twitter:title" content="Forex Back Office & MetaTrader MT5 Management | 4X BackOffice" />
+    <meta property="twitter:description" content="MetaTrader MT4/MT5 management, low-latency forex trading servers, liquidity bridges, smart order routing and risk management for brokers." />
     <meta property="twitter:image" content="https://4xbo.com/logo-og.png" />
+    <meta property="twitter:image:alt" content="4X BackOffice — B2B Forex Back Office Solutions" />
 
     <!-- Canonical Link -->
     <link rel="canonical" href="https://4xbo.com/" />
 
-    <!-- Google Web Fonts Option (Inter & Space Grotesk) -->
+    <!-- Google Web Fonts: Inter (sans), Sora (display), JetBrains Mono (mono) — single request, only the weights actually used -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
 
     <!-- B2B Service Schema Markup (JSON-LD) for E-E-A-T Signaling -->
     <script type="application/ld+json">
@@ -40,7 +49,7 @@
       "@type": "Product",
       "name": "4X BackOffice Broker Solutions",
       "image": "https://4xbo.com/logo-og.png",
-      "description": "Enterprise-grade B2B forex back office solutions, MT5 administration, server management, risk protection systems, and high-performance liquidity bridge integrations.",
+      "description": "B2B forex back office solutions, MetaTrader MT4/MT5 management, low-latency forex trading server hosting, liquidity bridges with STP aggregation and smart order routing, and risk management.",
       "brand": {
         "@type": "Brand",
         "name": "4X BackOffice"
@@ -78,7 +87,31 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!--
+        SEO PRE-RENDER FALLBACK: real, crawlable content (H1, headings, internal links, keyword copy)
+        for crawlers that do not execute JavaScript (e.g. Seobility). React's createRoot().render()
+        clears this on mount, so users always see the full interactive app instead.
+      -->
+      <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);border:0;">
+        <h1 style="font-size:1.9rem;font-weight:800;margin:0 0 16px;">Forex Back Office &amp; MetaTrader MT4/MT5 Management &mdash; 4X BackOffice</h1>
+        <p>4X BackOffice provides forex back office solutions and MetaTrader MT4/MT5 management for brokers &mdash; low-latency forex trading servers, liquidity bridges with STP aggregation, smart order routing, and risk management.</p>
+
+        <h2 style="font-size:1.25rem;font-weight:700;margin:28px 0 8px;">MetaTrader MT5 Management &amp; Forex Broker Services</h2>
+        <p>Custom MetaTrader MT4/MT5 administration, low-latency trading server hosting (NY4, LD4, TY3), liquidity bridge and gateway integration, and real-time forex risk management.</p>
+
+        <h2 style="font-size:1.25rem;font-weight:700;margin:28px 0 8px;">Forex Liquidity Bridges &amp; Smart Order Routing</h2>
+        <p>As a forex broker technology provider, 4X BackOffice delivers MetaTrader server management, forex liquidity bridges with STP aggregation and smart order routing, and risk management for forex trading platforms.</p>
+
+        <h2 style="font-size:1.25rem;font-weight:700;margin:28px 0 8px;">Explore 4X BackOffice</h2>
+        <nav>
+          <a href="/why-us" style="color:#d4a02a;margin-right:14px;">Why Us</a>
+          <a href="/services" style="color:#d4a02a;margin-right:14px;">Services</a>
+          <a href="/products" style="color:#d4a02a;margin-right:14px;">Products</a>
+          <a href="/contact" style="color:#d4a02a;">Contact</a>
+        </nav>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

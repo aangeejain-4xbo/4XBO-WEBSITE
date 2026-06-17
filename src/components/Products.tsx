@@ -115,7 +115,7 @@ export const Products: React.FC<ProductsProps> = ({ onTalkClick }) => {
       />
       
       {/* ----------------- HERO SECTION ----------------- */}
-      <section className="relative min-h-[75vh] md:min-h-[80vh] flex flex-col justify-center items-center py-24 md:py-32 px-4 md:px-8 border-b border-white/5">
+      <section className="relative min-h-[75vh] md:min-h-[80vh] flex flex-col justify-center items-center py-14 sm:py-20 md:py-32 px-4 md:px-8 border-b border-white/5">
         
         {/* Luxury elements backdrop */}
         <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[320px] sm:w-[580px] aspect-square bg-[radial-gradient(circle_at_center,rgba(217,174,103,0.06)_0%,rgba(0,0,0,0)_65%)] blur-[80px] pointer-events-none z-0" />
@@ -178,8 +178,8 @@ export const Products: React.FC<ProductsProps> = ({ onTalkClick }) => {
       </section>
 
       {/* ----------------- PRODUCTS SECTION ----------------- */}
-      <section className="relative py-28 md:py-36 px-4 md:px-8 z-10 max-w-7xl mx-auto">
-        <div className="space-y-36 md:space-y-48">
+      <section className="relative py-16 sm:py-20 md:py-36 px-4 md:px-8 z-10 max-w-7xl mx-auto">
+        <div className="space-y-20 sm:space-y-28 md:space-y-48">
           
           {productsList.map((product, index) => {
             const isImageLeft = index % 2 === 0; // Alternate layout pattern
@@ -188,7 +188,7 @@ export const Products: React.FC<ProductsProps> = ({ onTalkClick }) => {
             return (
               <div 
                 key={product.id}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-stretch"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-20 items-stretch"
               >
                 
                 {/* Visual Area (Responsive placement switching based on isImageLeft) */}
@@ -462,7 +462,7 @@ export const Products: React.FC<ProductsProps> = ({ onTalkClick }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Inquire on WhatsApp with 4X BackOffice"
-                    className="group inline-flex items-center gap-3.5 px-6 py-4 border border-white/10 hover:border-gold-500/80 bg-transparent text-stone-200 hover:text-stone-950 hover:bg-[#D9AE67] hover:shadow-[0_0_30px_rgba(217,174,103,0.25)] font-mono text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer overflow-hidden relative z-10"
+                    className="group inline-flex items-center justify-center gap-3.5 whitespace-nowrap px-5 sm:px-6 py-4 border border-white/10 hover:border-gold-500/80 bg-transparent text-stone-200 hover:text-stone-950 hover:bg-[#D9AE67] hover:shadow-[0_0_30px_rgba(217,174,103,0.25)] font-mono text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer overflow-hidden relative z-10"
                   >
                     <span>Inquire on WhatsApp</span>
                     <Icon name="ArrowRight" size={13} className="transform duration-300 group-hover:translate-x-1 flex-shrink-0" />
@@ -477,7 +477,7 @@ export const Products: React.FC<ProductsProps> = ({ onTalkClick }) => {
       </section>
 
       {/* ----------------- ENTERPRISE INTEGRITY BLOCK ----------------- */}
-      <section className="relative py-24 md:py-32 bg-[#040405] border-t border-white/5 z-10">
+      <section className="relative py-14 sm:py-20 md:py-32 bg-[#040405] border-t border-white/5 z-10">
         
         {/* Soft atmospheric golden flare overlay */}
         <div className="absolute top-[40%] left-1/4 w-[280px] h-[280px] bg-gold-500/5 blur-[120px] rounded-full pointer-events-none" />

@@ -354,7 +354,7 @@ export const Services: React.FC = () => {
     <section 
       id="services" 
       ref={containerRef}
-      className="relative py-28 bg-[#040405] overflow-hidden px-4 select-none"
+      className="relative py-16 sm:py-20 md:py-28 bg-[#040405] overflow-hidden px-4 select-none"
     >
       {/* Background radial soft aura glow */}
       <div className="absolute top-1/2 left-1/3 w-[550px] h-[550px] bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.02)_0%,transparent_70%)] rounded-full blur-[100px] pointer-events-none" />
@@ -516,7 +516,7 @@ export const Services: React.FC = () => {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
+                          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] as const }}
                           className="overflow-hidden border-t border-white/[0.04] bg-[#0c0c0e]/85"
                         >
                           <div className="p-6 md:p-7 relative select-text z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">

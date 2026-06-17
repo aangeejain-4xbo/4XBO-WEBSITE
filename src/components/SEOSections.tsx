@@ -244,11 +244,11 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
       />
 
       {/* Trust-Building Metrics Section (Conversion Optimization Goal) */}
-      <section id="trust-metrics" className="relative py-20 bg-stone-950 border-t border-b border-white/5 overflow-hidden px-4 select-none">
+      <section id="trust-metrics" className="relative py-12 sm:py-16 md:py-20 bg-stone-950 border-t border-b border-white/5 overflow-hidden px-4 select-none">
         <div className="absolute inset-0 bg-[#060606] bg-[linear-gradient(to_right,rgba(255,255,255,0.005)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.005)_1px,transparent_1px)] bg-[size:24px_24px] opacity-40 z-0" />
         <div className="max-w-7xl mx-auto z-10 relative">
           <ScrollReveal3D>
-            <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 md:mb-16">
               <span className="text-[10px] font-mono font-black tracking-[0.25em] text-gold-500 uppercase block mb-3">
                 Trusted Forex Infrastructure Metrics
               </span>
@@ -256,7 +256,7 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
                 Enterprise Forex Broker Infrastructure & Operations Support
               </h2>
               <p className="font-sans font-light text-stone-400 text-xs sm:text-sm leading-relaxed max-w-2xl mx-auto">
-                Deliver seamless trading experiences with high-performance forex back office solutions. We specialize in comprehensive MT5 administration, dedicated broker operations support, automated CRM integration, and high-frequency liquidity bridge solutions. Boost operational efficiency with low-latency forex broker technology and enterprise-grade forex infrastructure management designed to scale institutional platforms worldwide.
+                Deliver seamless trading experiences with high-performance forex back office solutions. We specialize in comprehensive MT5 administration, dedicated broker operations support, MetaTrader MT4/MT5 platform management, and high-frequency liquidity bridge solutions with smart order routing. Boost operational efficiency with low-latency forex broker technology and enterprise-grade forex infrastructure management designed to scale institutional platforms worldwide.
               </p>
             </div>
 
@@ -286,12 +286,12 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
       </section>
 
       {/* SECTION 1: Comprehensive Forex Back Office Services */}
-      <section id="comprehensive-services" className="relative py-24 bg-[#050505] overflow-hidden px-4 md:px-8 select-none border-b border-white/5">
+      <section id="comprehensive-services" className="relative py-14 sm:py-20 md:py-24 bg-[#050505] overflow-hidden px-4 md:px-8 select-none border-b border-white/5">
         <div className="absolute top-[20%] right-[-10%] w-[450px] h-[450px] bg-gold-500/3 blur-[150px] rounded-full pointer-events-none z-0" />
 
         <div className="relative max-w-7xl mx-auto z-10">
           <ScrollReveal3D>
-            <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 md:mb-16">
               <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-gold-500 uppercase block mb-3">
                 PLATFORM OPERATIONAL HIGHLIGHTS
               </span>
@@ -362,12 +362,12 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
       </section>
 
       {/* SECTION 2: MT5 Hosting & Infrastructure Management */}
-      <section id="hosting-infrastructure" className="relative py-24 bg-[#080808] overflow-hidden px-4 md:px-8 select-none border-b border-white/5">
+      <section id="hosting-infrastructure" className="relative py-14 sm:py-20 md:py-24 bg-[#080808] overflow-hidden px-4 md:px-8 select-none border-b border-white/5">
         <div className="absolute top-1/2 left-[-15%] w-[500px] h-[500px] bg-gold-500/2 blur-[170px] rounded-full pointer-events-none z-0" />
 
         <div className="relative max-w-7xl mx-auto z-10">
           <ScrollReveal3D>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center">
               <div className="lg:col-span-5 flex flex-col items-start">
                 <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-gold-500 uppercase block mb-3">
                   ZERO-LATENCY ARCHITECTURE
@@ -415,11 +415,11 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
       </section>
 
       {/* SECTION 4: Why Brokers Choose 4XBO */}
-      <section id="why-brokers-choose" className="relative py-24 bg-[#080808] overflow-hidden px-4 md:px-8 select-none border-b border-white/5">
+      <section id="why-brokers-choose" className="relative py-14 sm:py-20 md:py-24 bg-[#080808] overflow-hidden px-4 md:px-8 select-none border-b border-white/5">
         <div className="absolute top-[30%] left-1/3 w-[450px] h-[450px] bg-gold-500/3 blur-[140px] rounded-full pointer-events-none z-0" />
 
         <div className="relative max-w-7xl mx-auto z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 md:mb-16">
             <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-gold-500 uppercase block mb-3">
               THE 4XBO BENEFIT
             </span>
@@ -487,10 +487,10 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
       </section>
 
       {/* PREMIUM FAQ SECTION */}
-      <section id="faq-section" className="relative py-24 bg-[#050505] overflow-hidden px-4 md:px-8 select-none">
+      <section id="faq-section" className="relative py-14 sm:py-20 md:py-24 bg-[#050505] overflow-hidden px-4 md:px-8 select-none">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[250px] bg-gold-500/3 blur-[120px] rounded-full pointer-events-none z-0" />
         <div className="max-w-4xl mx-auto z-10 relative">
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14 md:mb-16">
             <span className="text-[10px] font-mono font-black tracking-[0.25em] text-gold-500 uppercase block mb-3">
               KNOWLEDGE BASE support
             </span>
@@ -510,7 +510,7 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
                   key={idx}
                   onMouseEnter={() => setOpenFaq(idx)}
                   onMouseLeave={() => setOpenFaq(null)}
-                  className={`bg-[#0b0b0f] border transition-all duration-500 rounded-none relative group overflow-hidden ${
+                  className={`bg-[#0b0b0f] border transition-all duration-200 rounded-none relative group overflow-hidden ${
                     isOpen
                       ? "border-gold-500/40 shadow-[0_0_35px_rgba(202,162,96,0.18)] bg-[#0e0e14]"
                       : "border-white/5 hover:border-gold-500/20"
@@ -550,7 +550,7 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
                         className="overflow-hidden relative z-10"
                       >
                         <div className="px-6 pb-6 text-stone-350 font-sans font-light text-xs sm:text-sm leading-relaxed border-t border-white/[0.03] pt-4 transition-colors">

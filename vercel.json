@@ -3,6 +3,14 @@
   "buildCommand": "vite build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.4xbo.com" }],
+      "destination": "https://4xbo.com/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/((?!assets/|.*\\.[a-zA-Z0-9]+$).*)", "destination": "/index.html" }
   ]

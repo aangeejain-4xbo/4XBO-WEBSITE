@@ -37,6 +37,18 @@ export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
   const heroContentY = useTransform(scrollYProgress, [0, 0.15], [0, -130]);
   const heroContentOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
 
+  // Responsive sphere size: shrink the heavy 3D core on smaller screens so it never overflows.
+  const [sphereSize, setSphereSize] = useState(820);
+  useEffect(() => {
+    const computeSize = () => {
+      const w = window.innerWidth;
+      setSphereSize(w < 480 ? 320 : w < 768 ? 500 : w < 1280 ? 660 : 820);
+    };
+    computeSize();
+    window.addEventListener("resize", computeSize);
+    return () => window.removeEventListener("resize", computeSize);
+  }, []);
+
   const statusModules = [
     { title: "99.99% Uptime", desc: "Core Latency <0.1ms", position: "md:absolute md:top-[20%] md:left-4 lg:left-12 xl:left-20" },
     { title: "24/7 Support", desc: "Engineer On-Call SLA", position: "md:absolute md:bottom-[15%] md:left-4 lg:left-12 xl:left-20" },
@@ -124,10 +136,10 @@ export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-[#050505] py-24 px-4 md:px-8 select-none">
+    <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-[#050505] py-14 sm:py-20 md:py-24 px-4 md:px-8 select-none">
       
       {/* Exquisite Orbital Ellipses Behind Text (Symmetrically matching design mock) */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1300px] h-[850px] pointer-events-none select-none z-0 overflow-hidden flex items-center justify-center">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1300px] h-[440px] sm:h-[640px] md:h-[850px] pointer-events-none select-none z-0 overflow-hidden flex items-center justify-center">
         <svg 
           className="w-full h-full opacity-45 sm:opacity-55 scale-[1.05] sm:scale-100" 
           viewBox="0 0 1200 800" 
@@ -204,16 +216,16 @@ export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
       </div>
 
       {/* Luxury Central Backlight Aura Overlay */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[650px] aspect-square rounded-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.14)_0%,rgba(138,106,24,0.01)_55%,transparent_100%)] blur-[95px] mix-blend-screen pointer-events-none z-0 animate-pulse" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] sm:w-[650px] aspect-square rounded-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.14)_0%,rgba(138,106,24,0.01)_55%,transparent_100%)] blur-[95px] mix-blend-screen pointer-events-none z-0 animate-pulse" />
 
       {/* Living Spherical Infrastructure Network Layer (Behind text) */}
-      <motion.div 
-        style={{ opacity: heroGlobeOpacity, scale: heroGlobeScale, y: "-50%", x: "-50%" }}
-        className="absolute top-1/2 left-1/2 w-[820px] h-[820px] z-0 pointer-events-none select-none flex items-center justify-center"
+      <motion.div
+        style={{ opacity: heroGlobeOpacity, scale: heroGlobeScale, y: "-50%", x: "-50%", width: sphereSize, height: sphereSize }}
+        className="absolute top-1/2 left-1/2 max-w-full z-0 pointer-events-none select-none flex items-center justify-center"
       >
         <ErrorBoundary>
           <Suspense fallback={null}>
-            <LivingInfrastructureSphere activeMode={activeSystemMode} size={820} />
+            <LivingInfrastructureSphere activeMode={activeSystemMode} size={sphereSize} />
           </Suspense>
         </ErrorBoundary>
       </motion.div>

@@ -40,7 +40,7 @@ const WhyUsCard = ({ card, index, activeIndex, totalCards, onNext, onPrev, onSel
       style={{
         position: "absolute",
         width: "100%",
-        maxWidth: "400px",
+        maxWidth: "min(400px, 88vw)",
         zIndex: zIndexVal,
         willChange: "transform, opacity",
         transform: "translateZ(0)"
@@ -69,7 +69,7 @@ const WhyUsCard = ({ card, index, activeIndex, totalCards, onNext, onPrev, onSel
         }
       }}
       onClick={onSelect}
-      className={`group relative rounded-2xl cursor-pointer flex flex-col justify-between border grow min-h-[360px] md:min-h-[350px] qt glow-card ${
+      className={`group relative rounded-2xl cursor-pointer flex flex-col justify-between border grow min-h-[300px] sm:min-h-[340px] md:min-h-[350px] qt glow-card ${
         isCenter
           ? "border-transparent bg-[#110F0C]"
           : "border-white/5 bg-[#0C0C0C]/80"
@@ -84,12 +84,12 @@ const WhyUsCard = ({ card, index, activeIndex, totalCards, onNext, onPrev, onSel
         )}
       </div>
 
-      <div className="relative p-8 flex flex-col justify-between h-full z-20 pointer-events-none">
+      <div className="relative p-6 sm:p-8 flex flex-col justify-between h-full z-20 pointer-events-none">
         {/* Content Container */}
         <div className="flex flex-col items-center text-center">
           {/* Icon container */}
           <div
-            className={`h-20 w-20 rounded-full flex items-center justify-center mb-6 border transition-all duration-300 ${
+            className={`h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full flex items-center justify-center mb-6 border transition-all duration-300 ${
               isCenter
                 ? "bg-gold-500/15 text-gold-400 border-gold-400/30"
                 : "bg-white/5 text-stone-400 border-white/5"
@@ -163,7 +163,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ onTalkClick }) => {
   }, [isHovered]);
 
   return (
-    <section id="why-us" className="relative py-24 bg-[#070707] overflow-hidden px-4 select-none">
+    <section id="why-us" className="relative py-14 sm:py-20 md:py-24 bg-[#070707] overflow-hidden px-4 select-none">
       {/* Parallax Ambient Lines */}
       <div className="ambient">
         <span className="gline" style={{ left: "15%", height: "100%", top: 0 }} />
@@ -220,7 +220,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ onTalkClick }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.95, ease: "easeOut" }}
-          className="relative h-[480px] md:h-[440px] flex items-center justify-center w-full"
+          className="relative h-[400px] sm:h-[440px] flex items-center justify-center w-full"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -269,7 +269,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ onTalkClick }) => {
             <button
               key={idx}
               onClick={() => setActiveIndex(idx)}
-              className="h-4 w-4 rounded-full flex items-center justify-center transition-all cursor-pointer group"
+              className="h-9 w-9 md:h-4 md:w-4 rounded-full flex items-center justify-center transition-all cursor-pointer group"
               title={`Jump to index ${idx + 1}`}
             >
               <motion.span 

@@ -15,7 +15,7 @@ export const ContactSection: React.FC = () => {
   // Inquiry submissions are handled by the shared "Let's Talk" modal (see TalkModal).
 
   return (
-    <section id="contact-us" className="relative py-20 bg-[#070707] overflow-hidden px-4">
+    <section id="contact-us" className="relative py-12 sm:py-16 md:py-20 bg-[#070707] overflow-hidden px-4">
       <AnimatedTrendBackground />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
@@ -42,7 +42,7 @@ export const ContactSection: React.FC = () => {
         </div>
 
         {/* Form + Map Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-start">
           
           {/* WhatsApp Primary Contact Card */}
           <div className="lg:col-span-12 xl:col-span-5 relative z-20">

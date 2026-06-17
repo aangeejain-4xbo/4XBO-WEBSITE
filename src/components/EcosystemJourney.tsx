@@ -211,7 +211,7 @@ export const EcosystemJourney: React.FC = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative bg-[#020202] py-24 sm:py-36 px-4 md:px-8 overflow-hidden select-none border-b border-white/5"
+      className="relative bg-[#020202] py-14 sm:py-24 md:py-36 px-4 md:px-8 overflow-hidden select-none border-b border-white/5"
     >
       {/* Premium ambient glows */}
       <div className="absolute inset-0 grid-bg-overlay opacity-[0.08] pointer-events-none" />
@@ -220,7 +220,7 @@ export const EcosystemJourney: React.FC = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         
         {/* Dynamic Header Block with dramatic design */}
-        <div className="max-w-3xl mx-auto text-center mb-24 md:mb-32">
+        <div className="max-w-3xl mx-auto text-center mb-14 sm:mb-20 md:mb-32">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-gold-400/5 border border-gold-400/15 mb-6">
             <span className="h-1.5 w-1.5 rounded-full bg-gold-400 animate-pulse" />
             <span className="text-[10px] font-mono font-black tracking-[0.25em] text-gold-400 uppercase">
@@ -236,7 +236,7 @@ export const EcosystemJourney: React.FC = () => {
         </div>
 
         {/* Master Interactive Vertical Timeline Tracks */}
-        <div ref={trackRef} className="relative mt-16 md:mt-24">
+        <div ref={trackRef} className="relative mt-10 sm:mt-16 md:mt-24">
 
           {/* Gold curved spine threaded through every layer node, drawn on scroll */}
           <svg
@@ -281,7 +281,7 @@ export const EcosystemJourney: React.FC = () => {
           </svg>
 
           {/* Sequential Story Elements */}
-          <div className="space-y-20 md:space-y-36 relative z-10">
+          <div className="space-y-14 sm:space-y-20 md:space-y-36 relative z-10">
             {steps.map((step, idx) => {
               const isCurrent = idx === activeIndex;
               const IconComponent = step.icon;
@@ -302,7 +302,7 @@ export const EcosystemJourney: React.FC = () => {
                   {/* Left-aligned on mobile, central on desktop */}
                   <div
                     ref={(el) => { nodeRefs.current[idx] = el; }}
-                    className={`absolute left-[-22px] sm:left-[-14px] md:left-1/2 md:-translate-x-1/2 top-4 flex items-center justify-center z-20`}
+                    className={`absolute left-[-12px] sm:left-[-14px] md:left-1/2 md:-translate-x-1/2 top-4 flex items-center justify-center z-20`}
                   >
                     <div className="relative flex items-center justify-center">
                       <div 
@@ -323,7 +323,7 @@ export const EcosystemJourney: React.FC = () => {
                   </div>
 
                   {/* MASTER STORY CONTENT CONTAINER CARD */}
-                  <div className={`ml-12 sm:ml-20 md:ml-0 w-full md:w-[44%] transition-all duration-500 ${
+                  <div className={`ml-9 sm:ml-16 md:ml-0 w-full md:w-[44%] transition-all duration-500 ${
                     isEven ? "md:pr-8" : "md:pl-8"
                   }`}>
                     

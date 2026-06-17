@@ -87,12 +87,12 @@ export const CtaBand: React.FC<CtaBandProps> = ({ onTalkClick }) => {
   }, []);
 
   return (
-    <section id="cta-section" className="relative py-20 px-4 md:px-8 select-none overflow-hidden bg-[#030303]">
+    <section id="cta-section" className="relative py-12 sm:py-16 md:py-20 px-4 md:px-8 select-none overflow-hidden bg-[#030303]">
       {/* Container holding the custom card with precise details */}
       <div 
         data-rv
         data-rv-delay="1"
-        className="max-w-6xl mx-auto rounded-[26px] bg-gradient-to-b from-[#110F0D] to-[#070707] border border-[#d4a02a]/20 p-8 md:p-14 relative overflow-hidden cta-shimmer-border shadow-[0_25px_60px_rgba(3,3,3,0.8)]"
+        className="max-w-6xl mx-auto rounded-[26px] bg-gradient-to-b from-[#110F0D] to-[#070707] border border-[#d4a02a]/20 p-6 sm:p-8 md:p-14 relative overflow-hidden cta-shimmer-border shadow-[0_25px_60px_rgba(3,3,3,0.8)]"
       >
         {/* Floating gold particle canvas layer */}
         <canvas 

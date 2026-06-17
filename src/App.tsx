@@ -20,46 +20,44 @@ import { useRouter } from "./router";
 import { EcosystemJourney } from "./components/EcosystemJourney";
 import { MarqueeTicker } from "./components/MarqueeTicker";
 import { CtaBand } from "./components/CtaBand";
-import { Loader } from "./components/Loader";
 import { PageTransition } from "./components/PageTransition";
 import { WHATSAPP_URL } from "./config";
 
 export default function App() {
   const [isTalkOpen, setIsTalkOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const { currentPath, navigate } = useRouter();
 
   // Dynamic SEO Metadata Updater
   React.useEffect(() => {
-    let title = "B2B Forex Back Office Solutions | MT5 Admin & Server Management | 4X BackOffice";
-    let description = "4X BackOffice is a premier B2B Forex back office solutions provider for global brokers. Specialized in MT5 administration, high-performance server management, PrimeXM/Centroid bridge integrations, and premium risk management infrastructure.";
-    let keywords = "Forex back office, MT5 admin, server management, bridge integrations, gateway integrations, risk management, data protection, trade analysis, platform security, PrimeXM, Centroid Solutions, Tools for Brokers, B2B fintech, forex technology";
-    
+    let title = "Forex Back Office & MetaTrader MT5 Management | 4X BackOffice";
+    let description = "MetaTrader MT4/MT5 management & forex back office solutions for brokers — low-latency trading servers, liquidity bridges, smart order routing & risk management.";
+    let keywords = "forex back office solutions, MetaTrader management, MT5 administration, MT4 management, forex trading technology, forex trading infrastructure, liquidity bridges, STP aggregation, smart order routing, broker risk management, broker technology provider, PrimeXM, Centroid";
+
     switch (currentPath) {
       case "/":
-        title = "B2B Forex Back Office Solutions | MT5 Admin & Server Management | 4X BackOffice";
-        description = "4X BackOffice offers enterprise-grade Forex Back Office Solutions and MT5 Administration for global brokers. Connect robust CRMs, liquidity bridges, and low-latency servers.";
-        keywords = "Forex Back Office Solutions, Forex Broker Solutions, MT5 Administration, Forex Infrastructure, Broker Technology Provider, Forex CRM Solutions, Forex Broker Services";
+        title = "Forex Back Office & MetaTrader MT5 Management | 4X BackOffice";
+        description = "Enterprise forex back office solutions and MetaTrader MT4/MT5 management for global brokers — low-latency forex trading servers, liquidity bridges, smart order routing and institutional risk management.";
+        keywords = "forex back office solutions, MetaTrader management, MT5 administration, MT4 management, forex trading technology, forex trading infrastructure, liquidity bridges, smart order routing, broker risk management, broker technology provider";
         break;
       case "/why-us":
-        title = "Why Choose 4X BackOffice | Premium Broker Infrastructure";
-        description = "Discover why leading brokers choose 4X BackOffice for institutional MT5 servers, core risk protection, and multi-tier liquidity bridge management.";
-        keywords = "Why Choose 4X BackOffice, Broker Infrastructure, Forex Infrastructure, MT5 Server Uptime, Broker Technology Partner";
+        title = "Why 4X BackOffice | MetaTrader Management & Forex Trading Infrastructure";
+        description = "See why brokers choose 4X BackOffice for MetaTrader MT5 server management, low-latency forex trading infrastructure, multi-tier liquidity bridges and risk management.";
+        keywords = "why choose 4X BackOffice, MetaTrader server management, MT5 server uptime, forex trading infrastructure, broker technology partner, liquidity bridge management, broker risk management";
         break;
       case "/services":
-        title = "Forex Broker Services | MT5 Administration & Support | 4X BackOffice";
-        description = "Comprehensive broker technology services including custom MT5 configuration, hosting optimization, secure KYC pipelines, and liquidity setups.";
-        keywords = "Forex Broker Services, MT5 Administration, Forex Risk Management, Liquidity Bridge Solutions, Broker CRM Integration";
+        title = "Forex Broker Services | MetaTrader MT5 Management & Liquidity | 4X BackOffice";
+        description = "Forex broker technology services: custom MetaTrader MT4/MT5 administration, low-latency trading server hosting, liquidity bridge and STP aggregation setups, and real-time risk management.";
+        keywords = "forex broker services, MetaTrader management, MT5 administration, MT4 configuration, forex trading server hosting, liquidity bridge solutions, STP aggregation, forex risk management";
         break;
       case "/products":
-        title = "Forex Broker Products | Copy Trading, B-Book & Swap Management";
-        description = "Advanced broker technology products including copy trading, swap management, credit control, and B-book slippage solutions.";
-        keywords = "Forex Broker Products, Copy Trading Solutions, Swap Management, Credit Management, B-Book Slippage Management";
+        title = "Forex Broker Products | Copy Trading, B-Book & Swap Management | 4X BackOffice";
+        description = "Forex trading technology products — copy trading, swap and credit control, A-book/B-book allocation, and B-book slippage management for MetaTrader brokers.";
+        keywords = "forex broker products, copy trading solutions, swap management, credit management, A-book B-book allocation, B-book slippage management, MetaTrader trading tools";
         break;
       case "/contact":
-        title = "Contact Forex Technology Provider | 4X BackOffice Consultation";
-        description = "Get in touch with 4X BackOffice to configure your brokerage infrastructure, deploy secure servers, or inquire about custom bridge setups.";
-        keywords = "Contact Forex Technology Provider, Forex Technology Partner, MT5 Admin Support, Custom Bridge Setup Contact";
+        title = "Contact 4X BackOffice | MetaTrader MT5 & Forex Back Office Support";
+        description = "Contact 4X BackOffice to deploy MetaTrader MT5 servers, configure liquidity bridges and smart order routing, or scale your forex trading infrastructure.";
+        keywords = "contact forex technology provider, MetaTrader MT5 support, forex back office support, liquidity bridge setup, forex trading infrastructure consultation";
         break;
     }
 
@@ -123,7 +121,7 @@ export default function App() {
           "@type": "Organization",
           "name": "4X BackOffice",
           "url": "https://4xbo.com",
-          "description": "Provider of premium B2B Forex back office solutions, MT5 server administration, and low-latency smart order routing hubs.",
+          "description": "Provider of B2B forex back office solutions, MetaTrader MT4/MT5 server management, low-latency forex trading infrastructure, liquidity bridges, smart order routing and risk management.",
           "logo": "https://4xbo.com/logo.png"
         },
         {
@@ -139,7 +137,15 @@ export default function App() {
               "name": "What are Forex Back Office Services?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Forex back-office services encompass the operational framework required to run a brokerage, including MT5 server configuration, custom liquidity bridge gateways, CRM lead sync pipelines, and regulatory security audits."
+                "text": "Forex back-office services cover the operational framework required to run a brokerage, including MetaTrader MT4/MT5 server configuration, custom liquidity bridge gateways, smart order routing, low-latency trading server hosting, and regulatory security audits."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is MetaTrader (MT4/MT5) management?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "MetaTrader management is the end-to-end administration of MT4 and MT5 trading platforms — symbol and group configuration, leverage and margin profiles, plugin and routing rules, server hosting, and 24/7 monitoring of your forex trading infrastructure."
               }
             },
             {
@@ -147,7 +153,15 @@ export default function App() {
               "name": "Do you provide MT5 administration?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes, we provide 24/7 dedicated certified MT5 server administration including symbol groups, trading settings, margin calculations setup, and automatic failovers."
+                "text": "Yes. We provide 24/7 certified MetaTrader MT5 server administration including symbol groups, trading settings, margin calculation setup, and automatic failover."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do you offer liquidity bridges and risk management?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We configure low-latency liquidity bridges with STP aggregation and smart order routing to liquidity providers, plus real-time A-book/B-book allocation, exposure monitoring and automated hedging for broker risk management."
               }
             }
           ]
@@ -183,7 +197,7 @@ export default function App() {
     return () => {
       observer.disconnect();
     };
-  }, [currentPath, isLoading]); // Re-evaluate upon route change or loader completion
+  }, [currentPath]); // Re-evaluate upon route change
 
   // Parallax Ambient Lines scroll movement listener
   React.useEffect(() => {
@@ -379,7 +393,6 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen premium-fintech-bg text-stone-100 overflow-x-hidden font-sans selection:bg-gold-500/30 selection:text-white">
-      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
       <PageTransition />
       <CustomCursor />
       {/* Dynamic Background Noise/Texture & Hardware-accelerated grids */}

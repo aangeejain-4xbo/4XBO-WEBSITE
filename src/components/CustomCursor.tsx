@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { motion } from "motion/react";
+import { motion, useMotionValue } from "motion/react";
 
 export const CustomCursor: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -11,6 +11,10 @@ export const CustomCursor: React.FC = () => {
   const pointsRef = useRef<{ x: number; y: number }[]>([]);
   const isHoveringRef = useRef(false);
   const isVisibleRef = useRef(false);
+
+  // Motion values drive the follower dot directly — no React re-render per mouse move.
+  const followerX = useMotionValue(-100);
+  const followerY = useMotionValue(-100);
 
   const numPoints = 20; // Silky smooth segmented trailing chain
   const lagFactor = 0.28; // The damping speed of trail interpolation (creates the "delay" inertia)
@@ -25,7 +29,9 @@ export const CustomCursor: React.FC = () => {
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
-      
+      followerX.set(e.clientX);
+      followerY.set(e.clientY);
+
       if (!isVisibleRef.current) {
         isVisibleRef.current = true;
         setIsVisible(true);
@@ -141,13 +147,10 @@ export const CustomCursor: React.FC = () => {
         ctx.lineWidth = isHoveringRef.current ? 4.5 : 2.5;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        
-        // Add subtle shadow to line to enhance the glowing neon feel
-        ctx.shadowBlur = isHoveringRef.current ? 15 : 6;
-        ctx.shadowColor = "rgba(202, 162, 96, 0.25)";
-        
+
+        // The "screen" blend mode + additive gradient already produce the glow,
+        // so we skip the costly per-frame canvas shadowBlur on this full-width stroke.
         ctx.stroke();
-        ctx.shadowBlur = 0; // Reset shadow
 
         // 3. Render floating glow nodes (Lag layers)
         // We draw individual circle segments at specific intervals of the trail chain
@@ -213,12 +216,11 @@ export const CustomCursor: React.FC = () => {
       <motion.div
         className="hidden md:block fixed top-0 left-0 w-2 h-2 rounded-full border border-gold-400/40 bg-gold-400/10 pointer-events-none z-[10000] mix-blend-screen"
         style={{
-          x: mouseRef.current.x,
-          y: mouseRef.current.y,
+          x: followerX,
+          y: followerY,
           translateX: "-50%",
           translateY: "-50%",
           opacity: isVisible && isHovering ? 1 : 0,
-          scale: isClicked ? 0.7 : (isHovering ? 5.0 : 0)
         }}
         animate={{
           scale: isClicked ? 0.7 : (isHovering ? 5.0 : 0),

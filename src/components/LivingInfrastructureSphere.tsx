@@ -406,7 +406,7 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
     iconLabel: string;
   }[]>([
     { name: "Trading (MT5)", description: "High-performance bridge gateway", x: 0, y: -130, z: 0, projX: 0, projY: 0, color: "#fff3cc", iconLabel: "MT5" },
-    { name: "CRM", description: "Lead sync & manager allocator", x: -110, y: -40, z: 65, projX: 0, projY: 0, color: "#d4a02a", iconLabel: "CRM" },
+    { name: "Onboarding", description: "Client onboarding & routing", x: -110, y: -40, z: 65, projX: 0, projY: 0, color: "#d4a02a", iconLabel: "ONB" },
     { name: "Liquidity", description: "Multi-provider order router", x: 110, y: -40, z: 65, projX: 0, projY: 0, color: "#d4a02a", iconLabel: "LIQ" },
     { name: "Risk Management", description: "Exposure check & aggregation", x: 100, y: 70, z: -80, projX: 0, projY: 0, color: "#d4a02a", iconLabel: "RSK" },
     { name: "Payments", description: "Automated deposit/withdrawal ledger", x: -100, y: 70, z: -80, projX: 0, projY: 0, color: "#ffd700", iconLabel: "PAY" },

@@ -45,7 +45,7 @@ const BentoCard: React.FC<BentoCardProps> = ({
       viewport={{ once: true }}
       transition={{ duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -5 }}
-      className={`relative bg-[#09090b] border border-white/5 p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-2xl rounded-2xl group transition-transform duration-300 bx glow-card ${className}`}
+      className={`relative bg-[#09090b] border border-white/5 p-5 sm:p-6 md:p-10 flex flex-col justify-between overflow-hidden shadow-2xl rounded-2xl group transition-transform duration-300 bx glow-card ${className}`}
     >
       {/* Spotlight background radial glow */}
       <div 
@@ -81,7 +81,7 @@ const BentoCard: React.FC<BentoCardProps> = ({
 
 export const Expertise: React.FC<ExpertiseProps> = ({ onTalkClick }) => {
   return (
-    <section id="services" className="relative py-24 bg-[#050505] overflow-hidden px-4 md:px-8 select-none">
+    <section id="services" className="relative py-14 sm:py-20 md:py-24 bg-[#050505] overflow-hidden px-4 md:px-8 select-none">
       {/* Glow overlays to highlight this beautiful bento grid */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gold-500/3 blur-[180px] rounded-full pointer-events-none z-0" />
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gold-600/3 blur-[180px] rounded-full pointer-events-none z-0" />
@@ -89,7 +89,7 @@ export const Expertise: React.FC<ExpertiseProps> = ({ onTalkClick }) => {
       <div className="relative max-w-7xl mx-auto z-10">
         
         {/* Centered Heading Block */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 md:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -112,7 +112,7 @@ export const Expertise: React.FC<ExpertiseProps> = ({ onTalkClick }) => {
         </div>
 
         {/* Bento Grid layout with equal height cards, exactly matching the reference image layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 items-stretch">
           
           {/* Card 01 - Analyse with integrated chart layout */}
           <BentoCard delay={0}>
@@ -132,7 +132,7 @@ export const Expertise: React.FC<ExpertiseProps> = ({ onTalkClick }) => {
             </div>
 
             {/* Embedded illuminated custom financial trend chart */}
-            <div className="relative w-full h-40 bg-[#080808] border border-white/5 rounded-lg overflow-hidden flex items-end">
+            <div className="relative w-full h-32 sm:h-36 md:h-40 bg-[#080808] border border-white/5 rounded-lg overflow-hidden flex items-end">
               <div className="absolute inset-0 grid bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:14px_14px]" />
               
               {/* Animated financial candles / path */}
