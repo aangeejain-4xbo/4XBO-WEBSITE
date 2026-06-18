@@ -7,75 +7,106 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/logo-mark.png" />
     <link rel="apple-touch-icon" href="/logo-mark.png" />
-    <title>B2B Forex Back Office Solutions | MT5 Admin & Server Management | 4X BackOffice</title>
-    <meta name="description" content="4X BackOffice is a premier B2B Forex back office solutions provider for global brokers. Specialized in MT5 administration, high-performance server management, PrimeXM/Centroid bridge integrations, and premium risk management infrastructure." />
-    <meta name="keywords" content="Forex back office, MT5 admin, server management, bridge integrations, gateway integrations, risk management, data protection, trade analysis, platform security, PrimeXM, Centroid Solutions, Tools for Brokers, B2B fintech, forex technology" />
-    
+
+    <!-- Google Web Fonts: Inter (body) · Sora (display/LCP heading) · JetBrains Mono.
+         Single request, weights trimmed, Sora discovered early for faster LCP. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <!-- seo:head:start — In production server.ts replaces this whole block with
+         per-route tags (src/seo.ts renderHeadTags) so crawlers/social bots get
+         correct per-page metadata. The values below are the homepage defaults
+         and the static fallback. The client (App.tsx) also keeps them in sync
+         on client-side route changes. -->
+    <title>Forex Back Office Solutions for Brokers | 4X BackOffice</title>
+    <meta name="description" content="Enterprise B2B forex back office solutions: MT5 administration, low-latency server management, and PrimeXM/Centroid liquidity bridges for global brokers." />
+    <meta name="keywords" content="Forex Back Office Solutions, Forex Broker Solutions, MT5 Administration, Forex Infrastructure, Broker Technology Provider, Forex CRM Solutions" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="4X BackOffice" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://4xbo.com/" />
-    <meta property="og:title" content="B2B Forex Back Office Solutions | MT5 Admin & Server Management | 4X BackOffice" />
-    <meta property="og:description" content="Professional B2B broker infrastructure. Featuring MT5 admin, server hosting, secure gateways, and robust platform security with global operations in Dubai, HK, Singapore, and London." />
+    <meta property="og:title" content="Forex Back Office Solutions for Brokers | 4X BackOffice" />
+    <meta property="og:description" content="Enterprise B2B forex back office solutions: MT5 administration, low-latency server management, and PrimeXM/Centroid liquidity bridges for global brokers." />
     <meta property="og:image" content="https://4xbo.com/logo-og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="4X BackOffice — B2B Forex back office solutions for global brokers" />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://4xbo.com/" />
-    <meta property="twitter:title" content="B2B Forex Back Office Solutions | 4X BackOffice" />
-    <meta property="twitter:description" content="Streamline your brokerage operations with premium MT5 administrative setups, server management, and advanced liquidity bridges." />
-    <meta property="twitter:image" content="https://4xbo.com/logo-og.png" />
+    <!-- Twitter Card (name= per spec) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://4xbo.com/" />
+    <meta name="twitter:title" content="Forex Back Office Solutions for Brokers | 4X BackOffice" />
+    <meta name="twitter:description" content="Enterprise B2B forex back office solutions: MT5 administration, low-latency server management, and PrimeXM/Centroid liquidity bridges for global brokers." />
+    <meta name="twitter:image" content="https://4xbo.com/logo-og.png" />
+    <meta name="twitter:image:alt" content="4X BackOffice — B2B Forex back office solutions for global brokers" />
 
     <!-- Canonical Link -->
     <link rel="canonical" href="https://4xbo.com/" />
 
-    <!-- Google Web Fonts Option (Inter & Space Grotesk) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-
-    <!-- B2B Service Schema Markup (JSON-LD) for E-E-A-T Signaling -->
+    <!-- Sitewide structured data (homepage baseline). -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Product",
-      "name": "4X BackOffice Broker Solutions",
-      "image": "https://4xbo.com/logo-og.png",
-      "description": "Enterprise-grade B2B forex back office solutions, MT5 administration, server management, risk protection systems, and high-performance liquidity bridge integrations.",
-      "brand": {
-        "@type": "Brand",
-        "name": "4X BackOffice"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "bestRating": "5",
-        "worstRating": "1",
-        "ratingCount": "15"
-      },
-      "offers": {
-        "@type": "AggregateOffer",
-        "priceCurrency": "USD",
-        "offeredBy": {
-          "@type": "LocalBusiness",
-          "name": "4X BackOffice Solutions",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://4xbo.com/#organization",
+          "name": "4X BackOffice",
           "url": "https://4xbo.com",
-          "telephone": "",
+          "logo": "https://4xbo.com/logo.png",
+          "image": "https://4xbo.com/logo-og.png",
+          "description": "Enterprise-grade B2B forex back office solutions: MT5 administration, low-latency server management, risk protection, and high-performance liquidity bridge integrations.",
+          "sameAs": [],
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+971585099086",
+              "email": "inquiry@4xbo.com",
+              "contactType": "sales",
+              "areaServed": ["Dubai", "Hong Kong", "Singapore", "London"],
+              "availableLanguage": ["English"]
+            }
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://4xbo.com/#website",
+          "url": "https://4xbo.com/",
+          "name": "4X BackOffice",
+          "description": "B2B Forex Back Office Solutions, MT5 Administration & Support",
+          "publisher": { "@id": "https://4xbo.com/#organization" }
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://4xbo.com/#localbusiness",
+          "name": "4X BackOffice",
+          "url": "https://4xbo.com",
+          "telephone": "+971585099086",
+          "email": "inquiry@4xbo.com",
+          "image": "https://4xbo.com/logo-og.png",
+          "logo": "https://4xbo.com/logo.png",
+          "priceRange": "$$$",
           "address": {
             "@type": "PostalAddress",
             "addressLocality": "Dubai",
-            "addressCountry": "UAE"
+            "addressRegion": "Dubai",
+            "addressCountry": "AE"
           },
           "areaServed": [
-            { "@type": "AdministrativeArea", "name": "Global" },
             { "@type": "AdministrativeArea", "name": "Dubai" },
             { "@type": "AdministrativeArea", "name": "Hong Kong" },
             { "@type": "AdministrativeArea", "name": "Singapore" },
             { "@type": "AdministrativeArea", "name": "London" }
-          ]
+          ],
+          "parentOrganization": { "@id": "https://4xbo.com/#organization" }
         }
-      }
+      ]
     }
     </script>
+    <!-- seo:head:end -->
   </head>
   <body>
     <div id="root"></div>

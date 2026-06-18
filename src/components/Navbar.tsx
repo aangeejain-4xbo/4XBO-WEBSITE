@@ -119,6 +119,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onTalkClick }) => {
             <button
               id="mobile-nav-toggle"
               onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav-menu"
               className="p-2 rounded-none border border-white/10 hover:border-white/20 text-stone-300 hover:text-white transition-all cursor-pointer"
             >
               <Icon name={isOpen ? "X" : "Menu"} size={22} />
@@ -130,6 +133,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onTalkClick }) => {
         <AnimatePresence>
           {isOpen && (
             <motion.div
+              id="mobile-nav-menu"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}

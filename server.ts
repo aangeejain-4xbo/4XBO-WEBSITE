@@ -1,7 +1,8 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
+import fs from "fs";
 import dotenv from "dotenv";
+import { ROUTES, renderHeadTags } from "./src/seo";
 
 // Load environment variables
 dotenv.config();
@@ -9,54 +10,37 @@ dotenv.config();
 const app = express();
 const PORT = parseInt(process.env.PORT || "3535", 10);
 
-// ---------------------- TECHNICAL SEO SITEMAP & ROBOTS ----------------------
+// Production runs behind nginx (TLS termination + www->apex redirect). Trust the
+// proxy so req.protocol / req.hostname reflect the original request.
+app.set("trust proxy", true);
 
-app.get("/robots.txt", (_req, res) => {
-  res.type("text/plain");
-  res.send(`User-agent: *\nAllow: /\n\nSitemap: https://4xbo.com/sitemap.xml`);
-});
+// robots.txt and sitemap.xml are generated into public/ by
+// scripts/generate-sitemap.mjs and served as static files — by Vite's public
+// dir in dev and by express.static(dist) in prod. Single source of truth, so
+// no hardcoded SEO routes live here anymore.
 
-app.get("/sitemap.xml", (_req, res) => {
-  res.type("application/xml");
-  res.send(`<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://4xbo.com/</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://4xbo.com/why-us</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://4xbo.com/services</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://4xbo.com/products</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://4xbo.com/contact</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-</urlset>`);
-});
+// Replace the marked <head> block in index.html with per-route SEO tags so
+// non-JS crawlers and social unfurlers receive correct per-page metadata.
+// Matches the whole marked block (the markers may carry trailing comment text).
+const SEO_HEAD_RE = /<!--\s*seo:head:start[\s\S]*?seo:head:end\s*-->/;
+
+function injectHead(
+  template: string,
+  routePath: string,
+  opts?: { noindex?: boolean }
+): string {
+  const block = `<!-- seo:head:start -->\n    ${renderHeadTags(routePath, opts)}\n    <!-- seo:head:end -->`;
+  return template.replace(SEO_HEAD_RE, block);
+}
 
 // ---------------------- VITE DEV ENGINE / STATIC SERVING ----------------------
 
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
+    // Dev: Vite middleware serves index.html; the client (App.tsx) keeps the
+    // per-route <head> in sync. No server-side injection needed locally.
+    // Vite is imported only here so production never loads it.
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -64,9 +48,40 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+    // Read the built shell once; head injection happens per request.
+    const template = fs.readFileSync(path.join(distPath, "index.html"), "utf8");
+
+    // Static files (assets, logos, robots.txt, sitemap.xml). index:false so we
+    // render index.html ourselves with per-route head injection. Hashed Vite
+    // bundles under /assets are immutable -> cache for a year.
+    app.use(
+      express.static(distPath, {
+        index: false,
+        setHeaders: (res, filePath) => {
+          if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+            res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+          }
+        },
+      })
+    );
+
+    // Known SPA routes -> 200 with per-route <head> injected.
+    app.get(ROUTES as string[], (req, res) => {
+      res
+        .status(200)
+        .set("Cache-Control", "no-cache")
+        .type("html")
+        .send(injectHead(template, req.path));
+    });
+
+    // Unknown paths -> real 404 (noindex), still rendering the SPA shell so the
+    // client shows its not-found view.
+    app.use((_req, res) => {
+      res
+        .status(404)
+        .set("Cache-Control", "no-cache")
+        .type("html")
+        .send(injectHead(template, "/", { noindex: true }));
     });
   }
 

@@ -10,12 +10,15 @@ export const Partners: React.FC = () => {
   // Each technology partner logo. Every logo sits on a white chip that hugs it
   // tightly (see renderCard), so the focus stays on the brand name + mark.
   // `imgClass` tunes the per-logo height to balance their differing aspect ratios.
-  const partnerLogos: { id: string; src: string; alt: string; imgClass: string }[] = [
-    { id: "primexm",        src: "/partners/primexm.png",         alt: "PrimeXM",            imgClass: "h-[44px]" },
-    { id: "metatrader5",    src: "/partners/metatrader5.png",     alt: "MetaTrader 5",       imgClass: "h-[38px]" },
-    { id: "centroid",       src: "/partners/centroid.webp",       alt: "Centroid Solutions", imgClass: "h-[44px]" },
-    { id: "toolsforbrokers", src: "/partners/toolsforbrokers.jpg", alt: "Tools For Brokers",  imgClass: "h-[56px]" },
-    { id: "techysquad",     src: "/partners/techysquad.png",      alt: "TechySquad",         imgClass: "h-[44px]" },
+  // `w`/`h` are the assets' intrinsic pixel dimensions — set as <img> width/height
+  // so the browser reserves the correct aspect ratio and the marquee doesn't
+  // reflow (CLS) as lazy-loaded logos arrive.
+  const partnerLogos: { id: string; src: string; alt: string; imgClass: string; w: number; h: number }[] = [
+    { id: "primexm",        src: "/partners/primexm.png",         alt: "PrimeXM",            imgClass: "h-[44px]", w: 320, h: 124 },
+    { id: "metatrader5",    src: "/partners/metatrader5.png",     alt: "MetaTrader 5",       imgClass: "h-[38px]", w: 360, h: 62 },
+    { id: "centroid",       src: "/partners/centroid.webp",       alt: "Centroid Solutions", imgClass: "h-[44px]", w: 474, h: 266 },
+    { id: "toolsforbrokers", src: "/partners/toolsforbrokers.jpg", alt: "Tools For Brokers",  imgClass: "h-[56px]", w: 300, h: 167 },
+    { id: "techysquad",     src: "/partners/techysquad.png",      alt: "TechySquad",         imgClass: "h-[44px]", w: 180, h: 64 },
   ];
 
   // Duplicate the list so the marquee can loop seamlessly (CSS translateX 0% -> -50%).
@@ -23,7 +26,7 @@ export const Partners: React.FC = () => {
 
   // Shared premium card chrome reused for every logo in the running marquee.
   const renderCard = (
-    logo: { id: string; src: string; alt: string; imgClass: string },
+    logo: { id: string; src: string; alt: string; imgClass: string; w: number; h: number },
     key: React.Key
   ) => (
     <div
@@ -48,9 +51,11 @@ export const Partners: React.FC = () => {
         <div className="bg-white rounded-md inline-flex items-center justify-center px-3.5 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
           <img
             src={logo.src}
-            alt={logo.alt}
+            alt={`${logo.alt} — 4X BackOffice technology partner`}
             loading="lazy"
             decoding="async"
+            width={logo.w}
+            height={logo.h}
             className={`${logo.imgClass} max-w-[185px] w-auto object-contain`}
           />
         </div>

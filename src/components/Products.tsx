@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Icon } from "./Icon";
-import { WHATSAPP_URL } from "../config";
+import { WHATSAPP_URL, CONSULTATION_PHONE, CONTACT_EMAIL } from "../config";
 
 interface ProductsProps {
   onTalkClick: () => void;
@@ -98,9 +98,12 @@ export const Products: React.FC<ProductsProps> = ({ onTalkClick }) => {
         "@type": "AggregateOffer",
         "priceCurrency": "USD",
         "offeredBy": {
-          "@type": "LocalBusiness",
-          "name": "4X BackOffice Solutions",
-          "url": "https://4xbo.com"
+          "@type": "Organization",
+          "@id": "https://4xbo.com/#organization",
+          "name": "4X BackOffice",
+          "url": "https://4xbo.com",
+          "telephone": CONSULTATION_PHONE,
+          "email": CONTACT_EMAIL
         }
       }
     }))
@@ -143,7 +146,7 @@ export const Products: React.FC<ProductsProps> = ({ onTalkClick }) => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.06 }}
             className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.05]"
           >
-            Products
+            Forex Broker Products
           </motion.h1>
 
           <motion.p 

@@ -160,87 +160,30 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
     },
   ];
 
-  // Technical SEO Schema Data
-  const jsonLdData = {
+  // FAQPage schema — emitted ONLY here, where the FAQ is actually visible, so
+  // the markup stays byte-identical to the on-page questions/answers (Google
+  // policy). Organization/WebSite/ProfessionalService/Breadcrumb live in
+  // src/seo.ts (injected once per route by App.tsx) — do not duplicate them here.
+  const faqSchema = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://4xbo.com/#organization",
-        "name": "4X BackOffice",
-        "url": "https://4xbo.com",
-        "logo": "https://4xbo.com/logo-og.png",
-        "description": "Enterprise-grade B2B forex back office solutions, MT5 administration, server management, risk protection systems, and high-performance liquidity bridge integrations.",
-        "sameAs": [],
-        "contactPoints": [
-          {
-            "@type": "ContactPoint",
-            "telephone": "",
-            "contactType": "technical support",
-            "areaServed": "Global",
-            "availableLanguage": ["English"]
-          }
-        ]
+    "@type": "FAQPage",
+    "@id": "https://4xbo.com/#faq",
+    "mainEntity": faqItems.map((item) => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer,
       },
-      {
-        "@type": "FAQPage",
-        "@id": "https://4xbo.com/#faq",
-        "mainEntity": faqItems.map((item) => ({
-          "@type": "Question",
-          "name": item.question,
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": item.answer,
-          },
-        })),
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://4xbo.com/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://4xbo.com/",
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Forex Back Office Solutions",
-            "item": "https://4xbo.com/#services",
-          },
-        ],
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://4xbo.com/#website",
-        "url": "https://4xbo.com/",
-        "name": "4X BackOffice",
-        "description": "B2B Forex Back Office Solutions, MT5 Administration & Support",
-        "publisher": {
-          "@id": "https://4xbo.com/#organization"
-        }
-      },
-      {
-        "@type": "ContactPage",
-        "@id": "https://4xbo.com/contact/#webpage",
-        "url": "https://4xbo.com/contact",
-        "name": "Contact 4X BackOffice Solutions",
-        "description": "Get in touch with 4X BackOffice technical support and sales representation to configure your brokerage infrastructure, deploy secure servers, or inquire about custom bridge setups.",
-        "breadcrumb": {
-          "@id": "https://4xbo.com/#breadcrumb"
-        }
-      }
-    ],
+    })),
   };
 
   return (
     <>
-      {/* Dynamic SEO JSON-LD Injected Schema */}
+      {/* FAQ structured data — matches the visible FAQ section below */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       {/* Trust-Building Metrics Section (Conversion Optimization Goal) */}
@@ -528,7 +471,8 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
 
                   <button
                     onClick={() => toggleFaq(idx)}
-                    className="w-full flex justify-between items-center px-6 py-5 text-left cursor-pointer group focus:outline-none relative z-10"
+                    aria-expanded={isOpen}
+                    className="w-full flex justify-between items-center px-6 py-5 text-left cursor-pointer group relative z-10"
                   >
                     <span className={`font-sans text-sm md:text-base font-bold transition-all duration-300 ${
                       isOpen ? "text-gold-400 drop-shadow-[0_0_8px_rgba(202,162,96,0.2)]" : "text-stone-200 group-hover:text-gold-400"

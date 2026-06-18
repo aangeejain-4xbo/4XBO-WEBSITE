@@ -30,6 +30,8 @@ export const Logo: React.FC<LogoProps> = ({
         src={isIconOnly ? "/logo-mark.png" : "/logo.png"}
         alt="4X BackOffice"
         draggable={false}
+        width={isIconOnly ? 457 : 997}
+        height={isIconOnly ? 457 : 479}
         className={`w-auto object-contain ${isIconOnly ? markHeightClass : heightClass}`}
       />
     </motion.div>

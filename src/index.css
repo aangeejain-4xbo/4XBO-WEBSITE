@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Fonts are loaded via a single <link> in index.html (one request, Sora
+   discovered early for LCP). Do NOT re-add an @import here — it render-blocks
+   and double-downloads the families. */
 @import "tailwindcss";
 
 @theme {
@@ -330,6 +332,58 @@
   }
   100% {
     transform: scaleY(1.2) translateY(-12px);
+  }
+}
+
+/* Accessibility: keyboard skip link — visually hidden until it receives focus */
+.skip-link {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -120%);
+  z-index: 100;
+  padding: 0.65rem 1.15rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background: #d4a02a;
+  color: #0a0a0a;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus {
+  transform: translate(-50%, 0);
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Accessibility: a visible focus ring for keyboard users on interactive elements */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-gold-400, #e2b949);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Respect prefers-reduced-motion: neutralize CSS animations/transitions and
+   reveal scroll-reveal content immediately. (Framer Motion is additionally
+   gated via <MotionConfig reducedMotion="user"> in main.tsx.) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  [data-rv] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

@@ -1,5 +1,80 @@
 import React from "react";
-import * as LucideIcons from "lucide-react";
+import {
+  Activity,
+  ArrowRight,
+  BrainCircuit,
+  CheckCircle2,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Cpu,
+  Crown,
+  Database,
+  ExternalLink,
+  GitMerge,
+  Globe,
+  GraduationCap,
+  HelpCircle,
+  Layers,
+  Lock,
+  Mail,
+  Menu,
+  Phone,
+  PhoneCall,
+  Scale,
+  Server,
+  Settings,
+  Settings2,
+  Shield,
+  ShieldAlert,
+  ShieldCheck,
+  ThumbsUp,
+  TrendingUp,
+  Users,
+  X,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
+
+// Explicit icon registry. Only the icons actually used on the site are imported,
+// so the rest of lucide-react (~1,400 icons / ~800 kB) is tree-shaken out of the
+// bundle. Add an entry here when you introduce a new Lucide icon; unknown names
+// fall back to HelpCircle.
+const ICONS: Record<string, LucideIcon> = {
+  Activity,
+  ArrowRight,
+  BrainCircuit,
+  CheckCircle2,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Cpu,
+  Crown,
+  Database,
+  ExternalLink,
+  GitMerge,
+  Globe,
+  GraduationCap,
+  HelpCircle,
+  Layers,
+  Lock,
+  Mail,
+  Menu,
+  Phone,
+  PhoneCall,
+  Scale,
+  Server,
+  Settings,
+  Settings2,
+  Shield,
+  ShieldAlert,
+  ShieldCheck,
+  ThumbsUp,
+  TrendingUp,
+  Users,
+  X,
+  Zap,
+};
 
 interface IconProps extends Omit<React.ComponentPropsWithoutRef<"svg">, "name"> {
   name: string;
@@ -24,14 +99,6 @@ export const Icon: React.FC<IconProps> = ({ name, size = 24, className = "", ...
     );
   }
 
-  // Safe lookup with fallback
-  const LucideIcon = (LucideIcons as any)[name];
-
-  if (!LucideIcon) {
-    // Return a fallback icon (like HelpCircle) if the icon name is not found
-    const Fallback = LucideIcons.HelpCircle;
-    return <Fallback size={size} className={className} {...props} />;
-  }
-
+  const LucideIcon = ICONS[name] ?? HelpCircle;
   return <LucideIcon size={size} className={className} {...props} />;
 };

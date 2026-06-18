@@ -23,91 +23,63 @@ import { CtaBand } from "./components/CtaBand";
 import { Loader } from "./components/Loader";
 import { PageTransition } from "./components/PageTransition";
 import { WHATSAPP_URL } from "./config";
+import { getRouteSeo, canonicalFor, buildGraph } from "./seo";
 
 export default function App() {
   const [isTalkOpen, setIsTalkOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { currentPath, navigate } = useRouter();
 
-  // Dynamic SEO Metadata Updater
+  // Dynamic SEO metadata updater — single source of truth is src/seo.ts.
+  // Updates title, description/keywords, canonical, the full Open Graph AND
+  // Twitter Card sets, and the per-route JSON-LD @graph on every route change.
   React.useEffect(() => {
-    let title = "B2B Forex Back Office Solutions | MT5 Admin & Server Management | 4X BackOffice";
-    let description = "4X BackOffice is a premier B2B Forex back office solutions provider for global brokers. Specialized in MT5 administration, high-performance server management, PrimeXM/Centroid bridge integrations, and premium risk management infrastructure.";
-    let keywords = "Forex back office, MT5 admin, server management, bridge integrations, gateway integrations, risk management, data protection, trade analysis, platform security, PrimeXM, Centroid Solutions, Tools for Brokers, B2B fintech, forex technology";
-    
-    switch (currentPath) {
-      case "/":
-        title = "B2B Forex Back Office Solutions | MT5 Admin & Server Management | 4X BackOffice";
-        description = "4X BackOffice offers enterprise-grade Forex Back Office Solutions and MT5 Administration for global brokers. Connect robust CRMs, liquidity bridges, and low-latency servers.";
-        keywords = "Forex Back Office Solutions, Forex Broker Solutions, MT5 Administration, Forex Infrastructure, Broker Technology Provider, Forex CRM Solutions, Forex Broker Services";
-        break;
-      case "/why-us":
-        title = "Why Choose 4X BackOffice | Premium Broker Infrastructure";
-        description = "Discover why leading brokers choose 4X BackOffice for institutional MT5 servers, core risk protection, and multi-tier liquidity bridge management.";
-        keywords = "Why Choose 4X BackOffice, Broker Infrastructure, Forex Infrastructure, MT5 Server Uptime, Broker Technology Partner";
-        break;
-      case "/services":
-        title = "Forex Broker Services | MT5 Administration & Support | 4X BackOffice";
-        description = "Comprehensive broker technology services including custom MT5 configuration, hosting optimization, secure KYC pipelines, and liquidity setups.";
-        keywords = "Forex Broker Services, MT5 Administration, Forex Risk Management, Liquidity Bridge Solutions, Broker CRM Integration";
-        break;
-      case "/products":
-        title = "Forex Broker Products | Copy Trading, B-Book & Swap Management";
-        description = "Advanced broker technology products including copy trading, swap management, credit control, and B-book slippage solutions.";
-        keywords = "Forex Broker Products, Copy Trading Solutions, Swap Management, Credit Management, B-Book Slippage Management";
-        break;
-      case "/contact":
-        title = "Contact Forex Technology Provider | 4X BackOffice Consultation";
-        description = "Get in touch with 4X BackOffice to configure your brokerage infrastructure, deploy secure servers, or inquire about custom bridge setups.";
-        keywords = "Contact Forex Technology Provider, Forex Technology Partner, MT5 Admin Support, Custom Bridge Setup Contact";
-        break;
+    const seo = getRouteSeo(currentPath);
+    const canonical = canonicalFor(currentPath);
+
+    document.title = seo.title;
+
+    // Upsert a <meta> tag identified by name= or property=.
+    const setMeta = (attr: "name" | "property", key: string, content: string) => {
+      let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    setMeta("name", "description", seo.description);
+    setMeta("name", "keywords", seo.keywords);
+
+    // Open Graph
+    setMeta("property", "og:title", seo.title);
+    setMeta("property", "og:description", seo.description);
+    setMeta("property", "og:url", canonical);
+    setMeta("property", "og:image", seo.ogImage);
+    setMeta("property", "og:image:alt", seo.ogImageAlt);
+
+    // Twitter Card (previously never updated per route)
+    setMeta("name", "twitter:card", "summary_large_image");
+    setMeta("name", "twitter:title", seo.title);
+    setMeta("name", "twitter:description", seo.description);
+    setMeta("name", "twitter:url", canonical);
+    setMeta("name", "twitter:image", seo.ogImage);
+    setMeta("name", "twitter:image:alt", seo.ogImageAlt);
+
+    // Canonical URL
+    let canonicalEl = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonicalEl) {
+      canonicalEl = document.createElement("link");
+      canonicalEl.setAttribute("rel", "canonical");
+      document.head.appendChild(canonicalEl);
     }
+    canonicalEl.setAttribute("href", canonical);
 
-    document.title = title;
-
-    // Update meta description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute("content", description);
-    } else {
-      metaDesc = document.createElement("meta");
-      metaDesc.setAttribute("name", "description");
-      metaDesc.setAttribute("content", description);
-      document.head.appendChild(metaDesc);
-    }
-
-    // Update meta keywords
-    let metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (metaKeywords) {
-      metaKeywords.setAttribute("content", keywords);
-    } else {
-      metaKeywords = document.createElement("meta");
-      metaKeywords.setAttribute("name", "keywords");
-      metaKeywords.setAttribute("content", keywords);
-      document.head.appendChild(metaKeywords);
-    }
-
-    // Update Open Graph tags for social search optimization
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) ogTitle.setAttribute("content", title);
-    const ogDesc = document.querySelector('meta[property="og:description"]');
-    if (ogDesc) ogDesc.setAttribute("content", description);
-    
-    const ogUrl = document.querySelector('meta[property="og:url"]');
-    if (ogUrl) ogUrl.setAttribute("content", `https://4xbo.com${currentPath}`);
-
-    // Update Canonical URL
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (canonical) {
-      canonical.setAttribute("href", `https://4xbo.com${currentPath}`);
-    } else {
-      canonical = document.createElement("link");
-      canonical.setAttribute("rel", "canonical");
-      canonical.setAttribute("href", `https://4xbo.com${currentPath}`);
-      document.head.appendChild(canonical);
-    }
-
-    // Inject Dynamic JSON-LD Structured Data for absolute Google SEO Authority
+    // Per-route JSON-LD @graph (Organization + WebSite + ProfessionalService,
+    // plus Service nodes / BreadcrumbList where relevant). FAQPage is emitted
+    // separately by SEOSections so it only appears where the FAQ is visible.
     let schemaScript = document.getElementById("structured-data-schema");
     if (!schemaScript) {
       schemaScript = document.createElement("script");
@@ -115,46 +87,7 @@ export default function App() {
       schemaScript.setAttribute("type", "application/ld+json");
       document.head.appendChild(schemaScript);
     }
-    
-    const structuredSchema = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "name": "4X BackOffice",
-          "url": "https://4xbo.com",
-          "description": "Provider of premium B2B Forex back office solutions, MT5 server administration, and low-latency smart order routing hubs.",
-          "logo": "https://4xbo.com/logo.png"
-        },
-        {
-          "@type": "WebSite",
-          "url": "https://4xbo.com",
-          "name": "4X BackOffice"
-        },
-        {
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "What are Forex Back Office Services?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Forex back-office services encompass the operational framework required to run a brokerage, including MT5 server configuration, custom liquidity bridge gateways, CRM lead sync pipelines, and regulatory security audits."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Do you provide MT5 administration?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes, we provide 24/7 dedicated certified MT5 server administration including symbol groups, trading settings, margin calculations setup, and automatic failovers."
-              }
-            }
-          ]
-        }
-      ]
-    };
-    schemaScript.innerHTML = JSON.stringify(structuredSchema);
+    schemaScript.textContent = JSON.stringify(buildGraph(currentPath));
   }, [currentPath]);
 
   // Hardware-accelerated dynamic [data-rv] scroll reveal mechanics
@@ -314,7 +247,7 @@ export default function App() {
                   Execution Capabilities
                 </span>
                 <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-white mt-4 tracking-tight leading-none text-glow-light">
-                  Our Services
+                  Forex Broker Services
                 </h1>
                 <p className="mt-4 font-sans font-light text-stone-400 text-sm sm:text-base max-w-2xl leading-relaxed">
                   From deep structural MT5 administration to intelligent liquidity bridges, explore our full spectrum of developer and infrastructure services.
@@ -393,12 +326,16 @@ export default function App() {
         style={{ scaleX }}
       />
 
+      {/* Accessibility: real keyboard skip link (visible only on focus) */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* Global Header */}
-      <nav id="navbar-skip" className="sr-only">Skip navigation</nav>
       <Navbar onTalkClick={openTalkModal} />
 
       {/* Page Content structure with staggered entrances with Framer Motion */}
-      <main className="relative z-10">
+      <main id="main-content" className="relative z-10">
         <Suspense
           fallback={
             <div className="flex items-center justify-center py-40">

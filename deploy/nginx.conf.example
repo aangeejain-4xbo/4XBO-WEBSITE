@@ -1,0 +1,77 @@
+# ---------------------------------------------------------------------------
+# nginx site config for 4X BackOffice (https://4xbo.com)
+# Topology: nginx (TLS + redirects) -> Node/Express (server.ts) via PM2/systemd.
+#
+# The Node app listens on 127.0.0.1:3535 (PORT env). nginx terminates TLS,
+# forces https, redirects www -> apex, and reverse-proxies everything to Node.
+# Per-route <head>/JSON-LD injection, real 404s, and SPA routing are handled by
+# server.ts, so nginx just needs to proxy and pass the right forwarded headers.
+#
+# Install: copy to /etc/nginx/sites-available/4xbo.com, symlink into
+# sites-enabled, run `sudo nginx -t && sudo systemctl reload nginx`.
+# TLS certs below assume certbot/Let's Encrypt.
+# ---------------------------------------------------------------------------
+
+# 1) HTTP -> HTTPS (all hosts)
+server {
+    listen 80;
+    listen [::]:80;
+    server_name 4xbo.com www.4xbo.com;
+    return 301 https://4xbo.com$request_uri;
+}
+
+# 2) HTTPS www -> apex (canonical host is the apex)
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name www.4xbo.com;
+
+    ssl_certificate     /etc/letsencrypt/live/4xbo.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/4xbo.com/privkey.pem;
+
+    return 301 https://4xbo.com$request_uri;
+}
+
+# 3) HTTPS apex -> Node app
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name 4xbo.com;
+
+    ssl_certificate     /etc/letsencrypt/live/4xbo.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/4xbo.com/privkey.pem;
+
+    # Gzip (Brotli too if the module is available).
+    gzip on;
+    gzip_comp_level 6;
+    gzip_min_length 1024;
+    gzip_types text/plain text/css application/javascript application/json
+               image/svg+xml application/xml application/ld+json;
+
+    # Hashed Vite bundles are immutable — cache hard. (server.ts also sets this,
+    # but serving them straight from disk here skips the Node hop entirely.)
+    location /assets/ {
+        root /var/www/4xbo/dist;     # <-- path to the built dist/ on the server
+        access_log off;
+        expires 1y;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files $uri @app;
+    }
+
+    # Everything else -> Node (handles SPA routes, per-route head injection, 404).
+    location / {
+        proxy_pass http://127.0.0.1:3535;
+        proxy_http_version 1.1;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;   # so Express trust proxy works
+        proxy_set_header X-Forwarded-Host  $host;
+    }
+
+    location @app {
+        proxy_pass http://127.0.0.1:3535;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
