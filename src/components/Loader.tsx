@@ -13,7 +13,7 @@ export const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
   // Status message rotation based on progress thresholds
   useEffect(() => {
     if (progress < 22) {
-      setStatusMessage("CALIBRATING THE REACTOR CORE...");
+      setStatusMessage("ESTABLISHING SECURE CORE...");
     } else if (progress < 45) {
       setStatusMessage("CONNECTING NY4 & LD4 SERVER HUBS...");
     } else if (progress < 70) {
@@ -95,7 +95,7 @@ export const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
 
             {/* Mono loading label and state */}
             <h2 className="font-mono text-xs font-black tracking-[0.3em] text-[#FCFCFC] mb-4 text-center uppercase">
-              CALIBRATING THE CORE...
+              INITIALIZING SECURE CORE...
             </h2>
 
             {/* Structured Progress Bar container */}
