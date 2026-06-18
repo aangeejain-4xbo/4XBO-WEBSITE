@@ -29,7 +29,19 @@ server {
     ssl_certificate     /etc/letsencrypt/live/4xbo.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/4xbo.com/privkey.pem;
 
-    return 301 https://4xbo.com$request_uri;
+    # Serve the Google Search Console verification file on www WITHOUT redirecting,
+    # so the https://www.4xbo.com/ URL-prefix property can be verified by HTML file.
+    # (A server-level `return` would skip locations, so the redirect lives in
+    # `location /` below and this exact-match location wins for the file path.)
+    location = /google99ad64cb8dc930a8.html {
+        proxy_pass http://127.0.0.1:3535;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        return 301 https://4xbo.com$request_uri;
+    }
 }
 
 # 3) HTTPS apex -> Node app
