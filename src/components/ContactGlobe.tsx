@@ -179,11 +179,13 @@ export const ContactGlobe: React.FC = () => {
     ro.observe(container);
 
     const tmp = new THREE.Vector3();
-    const clock = new THREE.Clock();
+    let lastTime = performance.now();
     let animId = 0;
 
     const tick = () => {
-      const dt = clock.getDelta();
+      const _now = performance.now();
+      const dt = (_now - lastTime) / 1000;
+      lastTime = _now;
       st.time += dt;
 
       // Rotation: auto-spin, or coast from drag
@@ -195,7 +197,6 @@ export const ContactGlobe: React.FC = () => {
       }
 
       // Pulsing ping rings
-      const pulse = 1 + ((st.time * 1.4) % 1.5);
       markers.forEach((m, i) => {
         const p = 1 + ((st.time * 1.4 + i * 0.4) % 1.5);
         m.ring.scale.setScalar(p);
@@ -213,7 +214,6 @@ export const ContactGlobe: React.FC = () => {
           labelEl.style.opacity = front ? "1" : "0";
         }
       });
-      void pulse;
 
       renderer.render(scene, camera);
       animId = requestAnimationFrame(tick);

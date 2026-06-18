@@ -45,7 +45,7 @@ export const DEFAULT_SEO: RouteSeo = {
   description:
     "Enterprise B2B forex back office solutions: MT5 administration, low-latency server management, and PrimeXM/Centroid liquidity bridges for global brokers.",
   keywords:
-    "Forex back office solutions, MT5 administration, server management, liquidity bridge, risk management, broker technology provider",
+    "Forex back office solutions, MT5 administration, server management, liquidity bridge, risk management, broker technology provider, white label MT5, turnkey brokerage solution, FIX API, Tier-1 liquidity, MetaTrader server hosting, multi-asset CFD brokerage technology",
   ogImage: DEFAULT_OG_IMAGE,
   ogImageAlt: DEFAULT_OG_ALT,
   breadcrumb: "Home",
@@ -57,7 +57,7 @@ export const ROUTE_SEO: Record<PathRoute, RouteSeo> = {
     description:
       "Enterprise B2B forex back office solutions: MT5 administration, low-latency server management, and PrimeXM/Centroid liquidity bridges for global brokers.",
     keywords:
-      "Forex Back Office Solutions, Forex Broker Solutions, MT5 Administration, Forex Infrastructure, Broker Technology Provider, Forex CRM Solutions",
+      "Forex Back Office Solutions, Forex Broker Solutions, MT5 Administration, Forex Infrastructure, Broker Technology Provider, Forex CRM Solutions, white label MT5, turnkey brokerage solution, start a forex brokerage, MetaTrader server hosting, multi-asset CFD brokerage technology, brokerage management system",
     ogImage: DEFAULT_OG_IMAGE,
     ogImageAlt: DEFAULT_OG_ALT,
     breadcrumb: "Home",
@@ -67,7 +67,7 @@ export const ROUTE_SEO: Record<PathRoute, RouteSeo> = {
     description:
       "See why global brokers trust 4X BackOffice for institutional MT5 servers, 99.99% uptime, core risk protection, and multi-tier liquidity bridge management.",
     keywords:
-      "Why Choose 4X BackOffice, Broker Infrastructure, Forex Infrastructure, MT5 Server Uptime, Broker Technology Partner",
+      "Why Choose 4X BackOffice, Broker Infrastructure, Forex Infrastructure, MT5 Server Uptime, Broker Technology Partner, Tier-1 liquidity, NY4 colocation, LD4 colocation, low-latency execution",
     ogImage: DEFAULT_OG_IMAGE,
     ogImageAlt: "Why brokers choose 4X BackOffice broker infrastructure",
     breadcrumb: "Why Us",
@@ -77,7 +77,7 @@ export const ROUTE_SEO: Record<PathRoute, RouteSeo> = {
     description:
       "Forex broker technology services: custom MT5 configuration, server hosting, liquidity bridges, risk management, data protection, and 24/7 support.",
     keywords:
-      "Forex Broker Services, MT5 Administration, Forex Risk Management, Liquidity Bridge Solutions, Broker CRM Integration, Server Management",
+      "Forex Broker Services, MT5 Administration, Forex Risk Management, Liquidity Bridge Solutions, Broker CRM Integration, Server Management, forex liquidity provider, liquidity aggregation, FIX API, FIX bridge connectivity, MT4 hosting, MT5 hosting, MetaTrader server hosting, low-latency execution",
     ogImage: DEFAULT_OG_IMAGE,
     ogImageAlt: "4X BackOffice forex broker services and MT5 administration",
     breadcrumb: "Services",
@@ -87,7 +87,7 @@ export const ROUTE_SEO: Record<PathRoute, RouteSeo> = {
     description:
       "Advanced broker products — copy trading, swap management, credit control, and B-book slippage protection — engineered to scale your brokerage. Talk to us.",
     keywords:
-      "Forex Broker Products, Copy Trading Solutions, Swap Management, Credit Management, B-Book Slippage Management",
+      "Forex Broker Products, Copy Trading Solutions, Swap Management, Credit Management, B-Book Slippage Management, A-book B-book, dealing desk, hybrid risk model, copy trading platform, trade copier, social trading, multi-asset CFD brokerage technology",
     ogImage: DEFAULT_OG_IMAGE,
     ogImageAlt: "4X BackOffice forex broker products: copy trading, swaps, B-book",
     breadcrumb: "Products",
@@ -97,7 +97,7 @@ export const ROUTE_SEO: Record<PathRoute, RouteSeo> = {
     description:
       "Contact 4X BackOffice to configure your brokerage infrastructure, deploy MT5 servers, or set up liquidity bridges. Serving Dubai, Hong Kong, Singapore & London.",
     keywords:
-      "Contact Forex Technology Provider, Forex Technology Partner, MT5 Admin Support, Custom Bridge Setup Contact",
+      "Contact Forex Technology Provider, Forex Technology Partner, MT5 Admin Support, Custom Bridge Setup Contact, start a forex brokerage, forex broker startup, FIX API connectivity, turnkey brokerage solution",
     ogImage: DEFAULT_OG_IMAGE,
     ogImageAlt: "Contact 4X BackOffice forex technology consultants",
     breadcrumb: "Contact",

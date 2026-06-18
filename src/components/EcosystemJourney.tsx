@@ -23,7 +23,8 @@ interface JourneyStep {
 // sides between consecutive nodes (always rightward on mobile to stay in frame).
 const buildSmoothPath = (pts: { x: number; y: number }[], isMobile: boolean): string => {
   if (pts.length < 2) return "";
-  const amp = isMobile ? 34 : 54;
+  // Mobile: amp 0 → a clean straight vertical timeline line. Desktop keeps the curved spine.
+  const amp = isMobile ? 0 : 54;
   let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
   for (let i = 0; i < pts.length - 1; i++) {
     const p0 = pts[i];
@@ -47,6 +48,8 @@ export const EcosystemJourney: React.FC = () => {
   const nodeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [pathD, setPathD] = useState<string>("");
   const [trackSize, setTrackSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
+  // Drives mobile-only spine styling (kept in sync via the measure() resize listener below).
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const steps: JourneyStep[] = [
     {
@@ -118,32 +121,39 @@ export const EcosystemJourney: React.FC = () => {
 
   useEffect(() => {
     // Zero-lag continuous scroll-based line progress tracking
+    let rafId = 0;
+    let ticking = false;
     const calculateProgress = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      
-      // Calculate how far the section is scrolled through the active trigger zone
-      // Start tracking when section is 20% from bottom of viewport, finish near the top
-      const triggerStart = viewportHeight * 0.8;
-      const triggerEnd = viewportHeight * 0.2;
-      
-      const totalDistance = rect.height - (triggerStart - triggerEnd);
-      const scrolled = -rect.top + triggerStart;
-      
-      let progress = scrolled / totalDistance;
-      progress = Math.max(0, Math.min(1, progress));
-      
-      window.requestAnimationFrame(() => {
+      // Coalesce bursts of scroll events into a single rAF per frame.
+      if (ticking) return;
+      ticking = true;
+      rafId = window.requestAnimationFrame(() => {
+        ticking = false;
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // Start tracking when section is 20% from bottom of viewport, finish near the top
+        const triggerStart = viewportHeight * 0.8;
+        const triggerEnd = viewportHeight * 0.2;
+
+        const totalDistance = rect.height - (triggerStart - triggerEnd);
+        const scrolled = -rect.top + triggerStart;
+
+        let progress = scrolled / totalDistance;
+        progress = Math.max(0, Math.min(1, progress));
         setScrollProgress(progress);
       });
     };
 
     // Fast and performant view intersection observer to highlight current step
+    // Zero-height trigger line at the exact viewport center: only one layer can
+    // contain it at a time, so each becomes active cleanly with no overlap race
+    // (a band let two adjacent layers fight, delaying the next one's glow).
     const observerOptions = {
       root: null,
-      rootMargin: "-25% 0px -38% 0px",
-      threshold: 0.1
+      rootMargin: "-50% 0px -50% 0px",
+      threshold: 0
     };
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
@@ -175,6 +185,7 @@ export const EcosystemJourney: React.FC = () => {
       observer.disconnect();
       window.removeEventListener("scroll", calculateProgress);
       window.removeEventListener("resize", calculateProgress);
+      cancelAnimationFrame(rafId);
       clearTimeout(timeoutId);
     };
   }, []);
@@ -193,16 +204,25 @@ export const EcosystemJourney: React.FC = () => {
         })
         .filter((p): p is { x: number; y: number } => p !== null);
       if (pts.length < 2) return;
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
       setTrackSize({ w: tr.width, h: tr.height });
-      setPathD(buildSmoothPath(pts, window.innerWidth < 768));
+      setPathD(buildSmoothPath(pts, mobile));
     };
 
     measure();
     const t1 = setTimeout(measure, 200);
     const t2 = setTimeout(measure, 600);
-    window.addEventListener("resize", measure);
+    // Debounce resize so measure() isn't hammered during continuous resizing.
+    let resizeId = 0;
+    const onResize = () => {
+      clearTimeout(resizeId);
+      resizeId = window.setTimeout(measure, 150);
+    };
+    window.addEventListener("resize", onResize);
     return () => {
-      window.removeEventListener("resize", measure);
+      window.removeEventListener("resize", onResize);
+      clearTimeout(resizeId);
       clearTimeout(t1);
       clearTimeout(t2);
     };
@@ -220,7 +240,7 @@ export const EcosystemJourney: React.FC = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         
         {/* Dynamic Header Block with dramatic design */}
-        <div className="max-w-3xl mx-auto text-center mb-24 md:mb-32">
+        <div className="max-w-3xl mx-auto text-center mb-14 md:mb-32">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-gold-400/5 border border-gold-400/15 mb-6">
             <span className="h-1.5 w-1.5 rounded-full bg-gold-400 animate-pulse" />
             <span className="text-[10px] font-mono font-black tracking-[0.25em] text-gold-400 uppercase">
@@ -236,7 +256,7 @@ export const EcosystemJourney: React.FC = () => {
         </div>
 
         {/* Master Interactive Vertical Timeline Tracks */}
-        <div ref={trackRef} className="relative mt-16 md:mt-24">
+        <div ref={trackRef} className="relative mt-8 md:mt-24">
 
           {/* Gold curved spine threaded through every layer node, drawn on scroll */}
           <svg
@@ -258,30 +278,32 @@ export const EcosystemJourney: React.FC = () => {
               d={pathD}
               fill="none"
               stroke="rgba(202,162,96,0.12)"
-              strokeWidth={2}
+              strokeWidth={isMobile ? 3 : 2}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            {/* Gold route drawn proportionally to scroll progress */}
+            {/* Gold route drawn proportionally to scroll progress (bolder + brighter glow on mobile) */}
             <path
               d={pathD}
               fill="none"
               stroke="url(#eco-zz-grad)"
-              strokeWidth={2.5}
+              strokeWidth={isMobile ? 4 : 2.5}
               strokeLinecap="round"
               strokeLinejoin="round"
               pathLength={1}
               strokeDasharray={1}
               strokeDashoffset={1 - scrollProgress}
               style={{
-                filter: "drop-shadow(0 0 6px rgba(212,160,42,0.8))",
+                filter: isMobile
+                  ? "drop-shadow(0 0 10px rgba(212,160,42,0.95))"
+                  : "drop-shadow(0 0 6px rgba(212,160,42,0.8))",
                 transition: "stroke-dashoffset 75ms ease-out",
               }}
             />
           </svg>
 
           {/* Sequential Story Elements */}
-          <div className="space-y-20 md:space-y-36 relative z-10">
+          <div className="space-y-14 md:space-y-36 relative z-10">
             {steps.map((step, idx) => {
               const isCurrent = idx === activeIndex;
               const IconComponent = step.icon;
@@ -294,7 +316,7 @@ export const EcosystemJourney: React.FC = () => {
                   data-step-index={idx}
                   ref={(el) => { stepRefs.current[idx] = el; }}
                   className={`relative w-full transition-all duration-700 ease-out flex flex-col md:flex-row ${
-                    isCurrent ? "opacity-100" : "opacity-35 blur-[0.4px]"
+                    isCurrent ? "opacity-100" : "opacity-60 md:opacity-35 blur-[0.4px]"
                   } ${isEven ? "md:justify-start" : "md:justify-end"}`}
                 >
                   
@@ -302,7 +324,7 @@ export const EcosystemJourney: React.FC = () => {
                   {/* Left-aligned on mobile, central on desktop */}
                   <div
                     ref={(el) => { nodeRefs.current[idx] = el; }}
-                    className={`absolute left-[-22px] sm:left-[-14px] md:left-1/2 md:-translate-x-1/2 top-4 flex items-center justify-center z-20`}
+                    className={`absolute left-0 sm:left-1 md:left-1/2 md:-translate-x-1/2 top-4 flex items-center justify-center z-20`}
                   >
                     <div className="relative flex items-center justify-center">
                       <div 
@@ -323,13 +345,13 @@ export const EcosystemJourney: React.FC = () => {
                   </div>
 
                   {/* MASTER STORY CONTENT CONTAINER CARD */}
-                  <div className={`ml-12 sm:ml-20 md:ml-0 w-full md:w-[44%] transition-all duration-500 ${
+                  <div className={`ml-14 sm:ml-20 md:ml-0 md:w-[44%] transition-all duration-500 ${
                     isEven ? "md:pr-8" : "md:pl-8"
                   }`}>
-                    
-                    <div className={`p-6 sm:p-8 border bg-[#060608]/90 backdrop-blur-md rounded-none relative transition-all duration-700 flex flex-col justify-between ${
-                      isCurrent 
-                        ? "border-gold-500/30 shadow-[0_4px_35px_rgba(212,175,55,0.06)] bg-[#0a0a0d]" 
+
+                    <div className={`p-3 sm:p-5 md:p-8 border bg-[#060608]/90 backdrop-blur-md rounded-none relative transition-all duration-700 flex flex-col justify-between ${
+                      isCurrent
+                        ? "border-gold-500/40 md:border-gold-500/30 shadow-[0_4px_30px_rgba(212,175,55,0.16)] md:shadow-[0_4px_35px_rgba(212,175,55,0.06)] bg-[#0a0a0d]"
                         : "border-white/5 hover:border-white/10"
                     }`}>
                       
@@ -345,7 +367,7 @@ export const EcosystemJourney: React.FC = () => {
 
                       <div>
                         {/* Header metadata tag line */}
-                        <div className={`flex items-center justify-between mb-5 w-full ${
+                        <div className={`flex items-center justify-between mb-3 md:mb-5 w-full ${
                           isEven ? "md:flex-row" : "md:flex-row-reverse"
                         }`}>
                           <span className={`font-mono text-[10px] md:text-xs font-black tracking-widest px-2.5 py-1 uppercase transition-all duration-500 ${
@@ -361,20 +383,20 @@ export const EcosystemJourney: React.FC = () => {
                         </div>
 
                         {/* Title text */}
-                        <h3 className={`font-display text-2xl sm:text-3xl font-extrabold tracking-tight mb-2 transition-all duration-500 ${
+                        <h3 className={`font-display text-base sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-2 transition-all duration-500 ${
                           isCurrent ? "text-white text-glow-light" : "text-stone-300"
                         }`}>
                           {step.title}
                         </h3>
 
                         {/* Subtitle tag line */}
-                        <span className="font-mono text-[10px] md:text-[11px] text-stone-400 tracking-wider block mb-5 uppercase">
+                        <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-stone-400 tracking-wider block mb-3 md:mb-5 uppercase">
                           {step.subtitle}
                         </span>
 
                         {/* Descriptive Paragraph text */}
                         <p
-                          className={`font-sans font-light text-sm sm:text-base leading-relaxed mb-6 transition-all duration-500 ${
+                          className={`font-sans font-light text-[11px] sm:text-sm md:text-base leading-relaxed mb-4 md:mb-6 transition-all duration-500 ${
                             isCurrent ? "text-stone-200" : "text-stone-300"
                           }`}
                           style={isCurrent ? { textShadow: "0 0 12px rgba(212,175,55,0.75), 0 0 26px rgba(212,175,55,0.45)" } : undefined}
@@ -389,7 +411,7 @@ export const EcosystemJourney: React.FC = () => {
                           {step.stats.map((stat, sIdx) => (
                             <div 
                               key={sIdx}
-                              className={`p-3 border rounded-none flex flex-col justify-center items-start transition-all duration-300 ${
+                              className={`p-2 sm:p-3 border rounded-none flex flex-col justify-center items-start transition-all duration-300 ${
                                 isCurrent 
                                   ? "border-gold-500/20 bg-[#0f0f13]/90" 
                                   : "border-white/5 bg-[#08080a]/90"
@@ -398,7 +420,7 @@ export const EcosystemJourney: React.FC = () => {
                               <span className="text-stone-500 font-mono text-[8.5px] uppercase tracking-wider mb-1 block">
                                 {stat.label}
                               </span>
-                              <span className="text-gold-400 font-display text-sm sm:text-base font-black tracking-tight leading-none">
+                              <span className="text-gold-400 font-display text-xs sm:text-sm md:text-base font-black tracking-tight leading-none">
                                 {stat.value}
                               </span>
                             </div>

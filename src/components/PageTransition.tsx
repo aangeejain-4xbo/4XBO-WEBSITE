@@ -49,7 +49,7 @@ export const PageTransition: React.FC = () => {
       {sweep !== null && (
         <motion.div
           key={sweep.key}
-          className="fixed inset-0 z-[120] pointer-events-none overflow-hidden"
+          className="fixed inset-0 z-[120] pointer-events-none overflow-hidden will-change-transform [backface-visibility:hidden]"
           // Forward: enter from the left, exit to the right.
           // Backward: enter from the right, exit to the left.
           initial={{ x: sweep.dir === 1 ? "-100%" : "100%" }}

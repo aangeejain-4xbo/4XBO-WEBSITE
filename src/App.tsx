@@ -11,6 +11,7 @@ import { Footer } from "./components/Footer";
 import { TalkModal } from "./components/TalkModal";
 import { Icon } from "./components/Icon";
 import { CustomCursor } from "./components/CustomCursor";
+import { TapRipple } from "./components/TapRipple";
 import { SEOSections } from "./components/SEOSections";
 import { WhyUs } from "./components/WhyUs";
 import { Mission } from "./components/Mission";
@@ -29,6 +30,9 @@ export default function App() {
   const [isTalkOpen, setIsTalkOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { currentPath, navigate } = useRouter();
+  // Render route content at deferred (non-blocking) priority so mounting a heavy
+  // page (3D scenes, etc.) doesn't stall the curtain transition's animation frames.
+  const deferredPath = React.useDeferredValue(currentPath);
 
   // Dynamic SEO metadata updater — single source of truth is src/seo.ts.
   // Updates title, description/keywords, canonical, the full Open Graph AND
@@ -142,9 +146,9 @@ export default function App() {
   const openTalkModal = () => setIsTalkOpen(true);
   const closeTalkModal = () => setIsTalkOpen(false);
 
-  // Map route path to components
+  // Map route path to components (uses deferredPath so heavy mounts stay non-blocking)
   const renderContent = () => {
-    switch (currentPath) {
+    switch (deferredPath) {
       case "/":
         return (
           <motion.div
@@ -315,6 +319,7 @@ export default function App() {
       {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
       <PageTransition />
       <CustomCursor />
+      <TapRipple />
       {/* Dynamic Background Noise/Texture & Hardware-accelerated grids */}
       <div className="absolute inset-0 pointer-events-none premium-noise-overlay opacity-[0.85] z-0" />
       <div className="absolute inset-0 pointer-events-none grid-bg-overlay opacity-[0.45] z-0" />

@@ -22,6 +22,9 @@ export const CustomCursor: React.FC = () => {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // Skip entirely on touch / mobile — the trail canvas is hidden there (`hidden md:block`),
+    // so running the listeners + 60fps rAF loop would only waste CPU and battery.
+    if (!window.matchMedia("(min-width: 768px) and (pointer: fine)").matches) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };

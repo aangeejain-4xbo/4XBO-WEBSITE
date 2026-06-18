@@ -76,7 +76,9 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
 
     // 6,000 Particle core with dynamic responsive density
     const screenWidth = window.innerWidth;
-    const densityPct = screenWidth < 768 ? 0.5 : (screenWidth < 1024 ? 0.75 : 1.0);
+    const isMobile = screenWidth < 768;
+    // Mobile-only: denser particle field for a brighter, fuller globe (desktop unchanged).
+    const densityPct = isMobile ? 0.7 : (screenWidth < 1024 ? 0.75 : 1.0);
     const particleCount = Math.floor(6000 * densityPct);
     const radius = 5.2;
     const geometry = new THREE.BufferGeometry();
@@ -146,7 +148,8 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
     const spriteTexture = createCircleTexture();
 
     const material = new THREE.PointsMaterial({
-      size: 0.13,
+      // Mobile-only: larger points so the additive glow reads brighter (desktop stays 0.13).
+      size: isMobile ? 0.2 : 0.13,
       vertexColors: true,
       transparent: true,
       opacity: 0.95,
@@ -275,12 +278,12 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
 
     // Intro Easing progress
     let intro = 0;
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
     let frameId: number;
 
     const animateScene = () => {
       frameId = requestAnimationFrame(animateScene);
-      const time = clock.getElapsedTime();
+      const time = (performance.now() - startTime) / 1000;
 
       if (intro < 1) {
         intro += 0.012;
@@ -327,8 +330,9 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
       }
       posAttr.needsUpdate = true;
 
-      material.size = 0.12 + Math.sin(time * 1.5) * 0.02 + disp * 0.05;
-      material.opacity = 0.95 - disp * 0.25;
+      // Mobile keeps a larger base point size so the additive glow reads brighter (desktop unchanged at 0.12).
+      material.size = (isMobile ? 0.19 : 0.12) + Math.sin(time * 1.5) * 0.02 + disp * 0.05;
+      material.opacity = Math.max(0, 0.95 - disp * 0.25);
 
       const motesPosAttr = motesGeo.getAttribute("position") as THREE.BufferAttribute;
       const motesPosArray = motesPosAttr.array as Float32Array;

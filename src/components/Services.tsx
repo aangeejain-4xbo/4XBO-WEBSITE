@@ -187,11 +187,11 @@ const ServicesWebGLGlobe: React.FC<{ activeIndex: number }> = ({ activeIndex }) 
 
     // ANIMATION TICK LOOP
     let animationFrameId: number;
-    let clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      const elapsedTime = (performance.now() - startTime) / 1000;
       
       // Rotate each shape independently to look organic
       meshes.forEach((mesh, idx) => {
@@ -284,7 +284,29 @@ export const Services: React.FC = () => {
 
   // Mouse coords tracking for local cursor spark and spot glows
   const [cursorCoords, setCursorCoords] = useState<{ [key: number]: { x: number; y: number } }>({});
+  const rowMoveTicking = useRef(false);
   const [rowHoveredMap, setRowHoveredMap] = useState<{ [key: number]: boolean }>({});
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Mobile/touch only: open each service as it scrolls to the viewport center
+  // (no hover on touch, so clicking felt clunky). Desktop keeps hover/click.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = entry.target.getAttribute("data-row-index");
+            if (idx !== null) setActiveIndex(parseInt(idx, 10));
+          }
+        });
+      },
+      { root: null, rootMargin: "-50% 0px -50% 0px", threshold: 0 }
+    );
+    rowRefs.current.forEach((r) => { if (r) observer.observe(r); });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -308,13 +330,15 @@ export const Services: React.FC = () => {
 
   const handleRowMouseMove = (idx: number, e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    setCursorCoords((prev) => ({
-      ...prev,
-      [idx]: {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      },
-    }));
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    // Throttle to one update per animation frame — avoids a re-render on every mousemove.
+    if (rowMoveTicking.current) return;
+    rowMoveTicking.current = true;
+    requestAnimationFrame(() => {
+      rowMoveTicking.current = false;
+      setCursorCoords((prev) => ({ ...prev, [idx]: { x, y } }));
+    });
   };
 
   const handleRowClick = (idx: number) => {
@@ -413,6 +437,8 @@ export const Services: React.FC = () => {
                 return (
                   <motion.div
                     key={srv.id}
+                    ref={(el) => { rowRefs.current[idx] = el; }}
+                    data-row-index={idx}
                     variants={rowItemVariants}
                     onMouseEnter={() => {
                       setHoveredIndex(idx);

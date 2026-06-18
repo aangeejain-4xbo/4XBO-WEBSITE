@@ -124,7 +124,7 @@ export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-[#050505] py-24 px-4 md:px-8 select-none">
+    <section className="relative min-h-[82vh] md:min-h-screen flex flex-col justify-center items-center overflow-hidden bg-[#050505] py-12 md:py-24 px-4 md:px-8 select-none">
       
       {/* Exquisite Orbital Ellipses Behind Text (Symmetrically matching design mock) */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1300px] h-[850px] pointer-events-none select-none z-0 overflow-hidden flex items-center justify-center">
@@ -213,7 +213,10 @@ export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
       >
         <ErrorBoundary>
           <Suspense fallback={null}>
-            <LivingInfrastructureSphere activeMode={activeSystemMode} size={820} />
+            {/* Mobile-only: enlarge the globe 50%. Desktop (md+) stays scale-100, unchanged. */}
+            <div className="scale-150 md:scale-100">
+              <LivingInfrastructureSphere activeMode={activeSystemMode} size={820} />
+            </div>
           </Suspense>
         </ErrorBoundary>
       </motion.div>
