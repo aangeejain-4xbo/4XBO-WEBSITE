@@ -7,176 +7,25 @@ export const Partners: React.FC = () => {
   // Logos are local assets — render them immediately, no artificial loading gate.
   const isLoading = false;
 
-  // Each technology partner logo, rendered inside identical premium cards.
-  const partnerLogos: { id: string; node: React.ReactNode }[] = [
-    {
-      id: "primexm",
-      node: (
-        <img
-          src="/partners/primexm.png"
-          alt="PrimeXM"
-          loading="lazy"
-          className="w-auto h-[58px] object-contain"
-        />
-      ),
-    },
-    {
-      id: "metatrader5",
-      node: (
-        <svg
-          className="w-auto h-[46px] object-contain transition-transform duration-300"
-          viewBox="0 0 280 60"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-label="MetaTrader 5"
-        >
-          {/* Embedded brand color gradient definitions to render realistic 3D appearance without filters */}
-          <defs>
-            <radialGradient id="mt5-sphere-green" cx="30%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#4ade80" />
-              <stop offset="45%" stopColor="#16a34a" />
-              <stop offset="100%" stopColor="#14532d" />
-            </radialGradient>
-            <radialGradient id="mt5-sphere-blue" cx="30%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#60a5fa" />
-              <stop offset="45%" stopColor="#2563eb" />
-              <stop offset="100%" stopColor="#1e3a8a" />
-            </radialGradient>
-            <radialGradient id="mt5-sphere-yellow" cx="30%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#fef08a" />
-              <stop offset="45%" stopColor="#eab308" />
-              <stop offset="100%" stopColor="#713f12" />
-            </radialGradient>
-            <linearGradient id="mt5-digit-orange" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#fb923c" />
-              <stop offset="45%" stopColor="#f97316" />
-              <stop offset="100%" stopColor="#c2410c" />
-            </linearGradient>
-          </defs>
-
-          <g transform="translate(5, 0)">
-            {/* Interconnected MetaTrader Nodes */}
-            <g transform="translate(0, -1)">
-              {/* Ring connections in original brand schema */}
-              <path d="M 22 36 A 8 8 0 1 1 22 24" stroke="#fbbf24" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.85" />
-              <circle cx="17.5" cy="30" r="4.8" fill="url(#mt5-sphere-yellow)" />
-
-              <path d="M 42 24 A 8 8 0 1 1 42 36" stroke="#3b82f6" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.85" />
-              <circle cx="46.5" cy="30" r="4.8" fill="url(#mt5-sphere-blue)" />
-
-              <path d="M 28 18 A 8 8 0 1 1 36 18" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.85" />
-              <circle cx="32" cy="13" r="4.8" fill="url(#mt5-sphere-green)" />
-
-              {/* Floating mini center structural sphere */}
-              <circle cx="32" cy="30" r="5" fill="#080808" stroke="#dddddd" strokeWidth="0.8" />
-              <path d="M 28 30 H 36 M 32 26 V 34" stroke="#ffffff" strokeWidth="0.8" />
-            </g>
-
-            {/* Exact text typography positioning */}
-            <text x="62" y="38" fill="#FFFFFF" fontFamily="system-ui, -apple-system, sans-serif" fontSize="23" fontWeight="700" letterSpacing="-0.02em">MetaTrader</text>
-            <text x="181" y="38" fill="url(#mt5-digit-orange)" fontFamily="system-ui, -apple-system, sans-serif" fontSize="28" fontWeight="900" letterSpacing="-0.01em">5</text>
-          </g>
-        </svg>
-      ),
-    },
-    {
-      id: "centroid",
-      node: (
-        <svg
-          className="w-auto h-[46px] object-contain transition-transform duration-300"
-          viewBox="0 0 280 60"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-label="Centroid Solutions"
-        >
-          <defs>
-            <linearGradient id="centroid-slice-red" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ef4444" />
-              <stop offset="100%" stopColor="#dc2626" />
-            </linearGradient>
-            <linearGradient id="centroid-slice-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0ea5e9" />
-              <stop offset="100%" stopColor="#0284c7" />
-            </linearGradient>
-            <linearGradient id="centroid-slice-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#2563eb" />
-              <stop offset="100%" stopColor="#1e40af" />
-            </linearGradient>
-          </defs>
-
-          <g transform="translate(5, 0)">
-            {/* High-fidelity vector layout mirroring the exact circular pie segments of the original logo */}
-            <g transform="translate(4, 0)">
-              {/* Solid Dark Navy Base segment (Right/Bottom-Right quadrant) */}
-              <circle cx="28" cy="30" r="18" fill="url(#centroid-slice-dark)" />
-              {/* Bright Red Segment (Left/Upper-Left quadrant) */}
-              <path d="M 28 30 L 10 30 A 18 18 0 0 1 28 12 Z" fill="url(#centroid-slice-red)" />
-              {/* Sky Blue Segment (Bottom-Left quadrant) */}
-              <path d="M 28 30 L 28 48 A 18 18 0 0 1 10 30 Z" fill="url(#centroid-slice-cyan)" />
-              {/* White center axle highlight */}
-              <circle cx="28" cy="30" r="1.8" fill="#ffffff" />
-            </g>
-
-            {/* Typography perfectly sized and kerned */}
-            <text x="58" y="32" fill="#0ea5e9" fontFamily="system-ui, -apple-system, sans-serif" fontSize="24" fontWeight="700" letterSpacing="-0.01em">Centroid</text>
-            <text x="59" y="46" fill="#e5e5e5" fontFamily="system-ui, -apple-system, sans-serif" fontSize="9" fontWeight="800" letterSpacing="0.32em">SOLUTIONS</text>
-          </g>
-        </svg>
-      ),
-    },
-    {
-      id: "toolsforbrokers",
-      node: (
-        <svg
-          className="w-auto h-[44px] object-contain transition-transform duration-300"
-          viewBox="0 0 280 60"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-label="Tools For Brokers"
-        >
-          <defs>
-            <linearGradient id="tfb-cyan-solid" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#22d3ee" />
-              <stop offset="100%" stopColor="#06b6d4" />
-            </linearGradient>
-          </defs>
-
-          <g transform="translate(5, 0)">
-            {/* High Quality Aquamarine Ring Visual Element */}
-            <g transform="translate(2, 0)">
-              <path d="M 28 15 A 15 15 0 1 0 43 30" stroke="url(#tfb-cyan-solid)" strokeWidth="6.5" strokeLinecap="round" fill="none" />
-              <circle cx="28" cy="30" r="5.2" fill="#06b6d4" />
-              {/* Aquamarine outer accent detail path */}
-              <path d="M 28 11 Q 40 11 41 23" stroke="#22d3ee" strokeWidth="4.2" strokeLinecap="round" fill="none" />
-            </g>
-
-            {/* Condensed high contrast brand typography match */}
-            <text x="60" y="37" fill="#FFFFFF" fontFamily="'Arial Black', 'Helvetica Neue', 'Impact', sans-serif" fontSize="19" fontWeight="900" letterSpacing="-0.04em">TOOLS FOR BROKERS</text>
-          </g>
-        </svg>
-      ),
-    },
-    {
-      id: "techysquad",
-      // White-background brand mark: presented on a light chip so it reads cleanly on the dark card.
-      node: (
-        <div className="bg-white rounded-lg px-5 py-3.5 flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
-          <img
-            src="/partners/techysquad.png"
-            alt="TechySquad"
-            loading="lazy"
-            className="h-[40px] w-auto object-contain"
-          />
-        </div>
-      ),
-    },
+  // Each technology partner logo. Every logo sits on a white chip that hugs it
+  // tightly (see renderCard), so the focus stays on the brand name + mark.
+  // `imgClass` tunes the per-logo height to balance their differing aspect ratios.
+  const partnerLogos: { id: string; src: string; alt: string; imgClass: string }[] = [
+    { id: "primexm",        src: "/partners/primexm.png",         alt: "PrimeXM",            imgClass: "h-[44px]" },
+    { id: "metatrader5",    src: "/partners/metatrader5.png",     alt: "MetaTrader 5",       imgClass: "h-[38px]" },
+    { id: "centroid",       src: "/partners/centroid.webp",       alt: "Centroid Solutions", imgClass: "h-[44px]" },
+    { id: "toolsforbrokers", src: "/partners/toolsforbrokers.jpg", alt: "Tools For Brokers",  imgClass: "h-[56px]" },
+    { id: "techysquad",     src: "/partners/techysquad.png",      alt: "TechySquad",         imgClass: "h-[44px]" },
   ];
 
   // Duplicate the list so the marquee can loop seamlessly (CSS translateX 0% -> -50%).
   const marqueeLogos = [...partnerLogos, ...partnerLogos];
 
   // Shared premium card chrome reused for every logo in the running marquee.
-  const renderCard = (logo: { id: string; node: React.ReactNode }, key: React.Key) => (
+  const renderCard = (
+    logo: { id: string; src: string; alt: string; imgClass: string },
+    key: React.Key
+  ) => (
     <div
       key={key}
       className="relative cursor-pointer group rounded-xl border border-[#caa260]/12 bg-[#040404] h-40 w-[240px] sm:w-[280px] shrink-0 transition-all duration-300 shadow-[0_1px_12px_rgba(0,0,0,0.8)] hover:border-[#caa260]/40 hover:shadow-[0_0_25px_rgba(202,162,96,0.25)] hover:-translate-y-1"
@@ -194,9 +43,17 @@ export const Partners: React.FC = () => {
         <div className="absolute inset-0 bg-[#caa260]/[0.01] group-hover:bg-[#caa260]/[0.03] transition-colors duration-300" />
       </div>
 
-      {/* Logo */}
+      {/* Logo — white chip hugs the brand name + logo (no empty box around it) */}
       <div className="w-full h-full flex items-center justify-center p-6">
-        {logo.node}
+        <div className="bg-white rounded-md inline-flex items-center justify-center px-3.5 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
+          <img
+            src={logo.src}
+            alt={logo.alt}
+            loading="lazy"
+            decoding="async"
+            className={`${logo.imgClass} max-w-[185px] w-auto object-contain`}
+          />
+        </div>
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ export const Footer: React.FC<FooterProps> = ({ onTalkClick }) => {
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col items-center text-center relative z-10">
 
         {/* Brand Multi-Column Grid Layout matching user diagram perfectly */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 text-left mb-16 relative z-10">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 text-left relative z-10">
           
           {/* Column 1: Brand Info */}
           <div className="lg:col-span-4 flex flex-col items-start pr-4">

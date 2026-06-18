@@ -219,7 +219,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.25 }}
           >
             <Hero onTalkClick={openTalkModal} />
             <Stats />
@@ -239,7 +239,7 @@ export default function App() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.35 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="relative pt-36 pb-12 bg-[#020202] overflow-hidden text-center md:text-left border-b border-white/5">
               <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-gold-500/5 blur-[120px] rounded-full pointer-events-none" />
@@ -305,7 +305,7 @@ export default function App() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.35 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="relative pt-36 pb-12 bg-[#020202] overflow-hidden text-center md:text-left border-b border-white/5">
               <div className="absolute top-1/2 left-1/3 w-[400px] h-[400px] bg-gold-500/5 blur-[120px] rounded-full pointer-events-none" />
@@ -332,7 +332,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.25 }}
           >
             <Products onTalkClick={openTalkModal} />
           </motion.div>
@@ -345,7 +345,7 @@ export default function App() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.35 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="relative pt-36 pb-12 bg-[#020202] overflow-hidden text-center md:text-left border-b border-white/5">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gold-500/5 blur-[150px] rounded-full pointer-events-none" />

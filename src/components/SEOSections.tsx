@@ -510,7 +510,7 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
                   key={idx}
                   onMouseEnter={() => setOpenFaq(idx)}
                   onMouseLeave={() => setOpenFaq(null)}
-                  className={`bg-[#0b0b0f] border transition-all duration-500 rounded-none relative group overflow-hidden ${
+                  className={`bg-[#0b0b0f] border [transition:border-color_400ms_ease,box-shadow_400ms_ease,background-color_400ms_ease] rounded-none relative group overflow-hidden ${
                     isOpen
                       ? "border-gold-500/40 shadow-[0_0_35px_rgba(202,162,96,0.18)] bg-[#0e0e14]"
                       : "border-white/5 hover:border-gold-500/20"
@@ -537,7 +537,7 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
                     </span>
                     <motion.div
                       animate={{ rotate: isOpen ? 180 : 0, color: isOpen ? "#caa260" : "#a8a29e" }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
                       className="ml-4"
                     >
                       <Icon name="ChevronDown" size={20} />
@@ -550,7 +550,10 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        transition={{
+                          height: { duration: 0.45, ease: [0.4, 0, 0.2, 1] },
+                          opacity: { duration: 0.35, ease: "easeInOut" },
+                        }}
                         className="overflow-hidden relative z-10"
                       >
                         <div className="px-6 pb-6 text-stone-350 font-sans font-light text-xs sm:text-sm leading-relaxed border-t border-white/[0.03] pt-4 transition-colors">
