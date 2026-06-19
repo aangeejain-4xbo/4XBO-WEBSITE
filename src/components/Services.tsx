@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import * as THREE from "three";
+import { motion } from "motion/react";
 import { Icon } from "./Icon";
 import { TRANSITIONS, ANIMATION_VARIANTS } from "../lib/animations";
 
@@ -98,178 +97,31 @@ const servicesList = [
   }
 ];
 
-// Faint Gold Wireframe morphing WebGL Scene on the background/side
-const ServicesWebGLGlobe: React.FC<{ activeIndex: number }> = ({ activeIndex }) => {
-  const mountRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!mountRef.current) return;
-    const container = mountRef.current;
-    const width = container.clientWidth || 420;
-    const height = container.clientHeight || 450;
-
-    // SCENE & TRANSPARENT BG
-    const scene = new THREE.Scene();
-
-    // CAMERA
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-    camera.position.z = 8.5;
-
-    // RENDERER
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-
-    // GENERAL WIREFRAME MATERIALS (Dull Gold & Bright Gold Glow)
-    const baseColor = new THREE.Color("#d4a02a");
-    
-    // Create pre-created distinct structural wireframes matching each service block
-    const shapesGroup = new THREE.Group();
-    scene.add(shapesGroup);
-
-    const meshes: THREE.LineSegments[] = [];
-
-    // Helper to wrap wireframe line segments around mesh geometry
-    const createWireSegment = (geo: THREE.BufferGeometry) => {
-      const wire = new THREE.WireframeGeometry(geo);
-      const mat = new THREE.LineBasicMaterial({
-        color: baseColor,
-        transparent: true,
-        opacity: 0,
-        blending: THREE.AdditiveBlending,
-      });
-      const segment = new THREE.LineSegments(wire, mat);
-      shapesGroup.add(segment);
-      meshes.push(segment);
-      return segment;
-    };
-
-    // Shape 0: Sphere (MT5 Admins Configuration)
-    const geo0 = new THREE.IcosahedronGeometry(1.8, 2);
-    createWireSegment(geo0);
-
-    // Shape 1: Box / Rack (Server Management)
-    const geo1 = new THREE.BoxGeometry(1.5, 1.5, 1.5, 3, 3, 3);
-    createWireSegment(geo1);
-
-    // Shape 2: Torus Knot (STP Bridge Gateway)
-    const geo2 = new THREE.TorusKnotGeometry(1.0, 0.28, 64, 12);
-    createWireSegment(geo2);
-
-    // Shape 3: Octahedron Double-Pyramid (Risk Protection)
-    const geo3 = new THREE.OctahedronGeometry(1.7, 1);
-    createWireSegment(geo3);
-
-    // Shape 4: Open Orbit Helix Ring (Institutional Trainings)
-    const geo4 = new THREE.TorusGeometry(1.4, 0.22, 10, 48);
-    createWireSegment(geo4);
-
-    // Faint subtle gold background point dust (5 - 10 particles maximum)
-    const starsGeo = new THREE.BufferGeometry();
-    const starsCount = 8;
-    const starsPos = new Float32Array(starsCount * 3);
-    for (let i = 0; i < starsCount; i++) {
-      starsPos[i * 3] = (Math.random() - 0.5) * 6;
-      starsPos[i * 3 + 1] = (Math.random() - 0.5) * 6;
-      starsPos[i * 3 + 2] = (Math.random() - 0.5) * 6;
-    }
-    starsGeo.setAttribute("position", new THREE.BufferAttribute(starsPos, 3));
-    const starsMat = new THREE.PointsMaterial({
-      color: new THREE.Color("#ffd900"),
-      size: 0.07,
-      transparent: true,
-      opacity: 0.18,
-      blending: THREE.AdditiveBlending
-    });
-    const starPoints = new THREE.Points(starsGeo, starsMat);
-    scene.add(starPoints);
-
-    // ANIMATION TICK LOOP
-    let animationFrameId: number;
-    const startTime = performance.now();
-
-    const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = (performance.now() - startTime) / 1000;
-      
-      // Rotate each shape independently to look organic
-      meshes.forEach((mesh, idx) => {
-        const factor = idx % 2 === 0 ? 1 : -1;
-        mesh.rotation.y = elapsedTime * 0.12 * factor;
-        mesh.rotation.x = elapsedTime * 0.07 * factor;
-        mesh.rotation.z = Math.sin(elapsedTime * 0.08) * 0.15;
-      });
-
-      // Overall coordinates tilt space
-      shapesGroup.rotation.y = Math.sin(elapsedTime * 0.06) * 0.08;
-      shapesGroup.rotation.x = Math.cos(elapsedTime * 0.04) * 0.05;
-
-      // Smoothly blend opacities and scales toward targeted index
-      for (let i = 0; i < meshes.length; i++) {
-        const isCurrent = i === activeIndex;
-        const mat = meshes[i].material as THREE.LineBasicMaterial;
-        
-        const targetOpacity = isCurrent ? 0.32 : 0.0;
-        mat.opacity += (targetOpacity - mat.opacity) * 0.1;
-
-        const targetScale = isCurrent ? 1.0 : 0.72;
-        meshes[i].scale.setScalar(
-          meshes[i].scale.x + (targetScale - meshes[i].scale.x) * 0.1
-        );
-      }
-
-      // Drift subtle dust points slowly (recycle if below threshold)
-      const positionsArr = starsGeo.attributes.position.array as Float32Array;
-      for (let i = 0; i < starsCount; i++) {
-        positionsArr[i * 3 + 1] -= 0.0025;
-        if (positionsArr[i * 3 + 1] < -3) {
-          positionsArr[i * 3 + 1] = 3;
-        }
-      }
-      starsGeo.attributes.position.needsUpdate = true;
-
-      renderer.render(scene, camera);
-    };
-
-    animate();
-
-    const handleResize = () => {
-      if (!container) return;
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    };
-
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
-    resizeObserver.observe(container);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      resizeObserver.disconnect();
-      meshes.forEach((mesh) => {
-        mesh.geometry.dispose();
-        if (Array.isArray(mesh.material)) {
-          mesh.material.forEach(m => m.dispose());
-        } else {
-          mesh.material.dispose();
-        }
-      });
-      starsGeo.dispose();
-      starsMat.dispose();
-      renderer.dispose();
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
-      }
-    };
-  }, [activeIndex]);
-
-  return <div ref={mountRef} className="w-full h-full relative" />;
-};
+// Lightweight CSS/SVG accent on the right side of the section. Pure compositor
+// transforms — no GPU render loop. Concentric gold rings rotate; the centre
+// shows the active service's icon. (Replaced an earlier Three.js morph that
+// caused hover lag on weaker GPUs — see git history if you want it back.)
+const ServicesCSSAccent: React.FC<{ activeIndex: number }> = React.memo(({ activeIndex }) => {
+  const active = servicesList[activeIndex] || servicesList[0];
+  return (
+    <div className="relative w-[320px] h-[320px] flex items-center justify-center">
+      <div className="absolute inset-0 rounded-full border border-[#d4a02a]/15 animate-[spin_30s_linear_infinite]" />
+      <div className="absolute inset-[12%] rounded-full border border-[#d4a02a]/20 animate-[spin_22s_linear_infinite_reverse]" />
+      <div className="absolute inset-[26%] rounded-full border border-dashed border-[#ffd900]/20 animate-[spin_16s_linear_infinite]" />
+      <div className="absolute inset-[40%] rounded-full border border-[#d4a02a]/25 animate-[spin_12s_linear_infinite_reverse]" />
+      {/* soft gold glow behind the icon */}
+      <div className="absolute inset-[32%] rounded-full bg-[radial-gradient(circle_at_center,rgba(212,160,42,0.14)_0%,transparent_70%)] blur-md animate-[pulse_4s_ease-in-out_infinite]" />
+      {/* centre icon reflects the active service; remounts (key) for a clean swap */}
+      <div
+        key={active.id}
+        className="relative z-10 text-[#ffd900] drop-shadow-[0_0_10px_rgba(255,217,0,0.5)] transition-transform duration-500"
+      >
+        <Icon name={active.iconName} size={42} />
+      </div>
+    </div>
+  );
+});
+ServicesCSSAccent.displayName = "ServicesCSSAccent";
 
 export const Services: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -278,15 +130,15 @@ export const Services: React.FC = () => {
   // Hover states tracking
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0); // First open as default
-  
-  // Flash gold sweeps on clicks
-  const [pulseRowIndex, setPulseRowIndex] = useState<number | null>(null);
 
-  // Mouse coords tracking for local cursor spark and spot glows
-  const [cursorCoords, setCursorCoords] = useState<{ [key: number]: { x: number; y: number } }>({});
+  // Cursor spark + spotlight glow are written straight to the DOM via refs.
+  // Driving them through React state would re-render the whole section on every
+  // mousemove frame; direct style writes keep the effect with zero re-renders.
   const rowMoveTicking = useRef(false);
   const [rowHoveredMap, setRowHoveredMap] = useState<{ [key: number]: boolean }>({});
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const glowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sparkRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Mobile/touch only: open each service as it scrolls to the viewport center
   // (no hover on touch, so clicking felt clunky). Desktop keeps hover/click.
@@ -332,21 +184,18 @@ export const Services: React.FC = () => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    // Throttle to one update per animation frame — avoids a re-render on every mousemove.
+    // Throttle to one DOM write per animation frame. No setState -> no re-render.
     if (rowMoveTicking.current) return;
     rowMoveTicking.current = true;
     requestAnimationFrame(() => {
       rowMoveTicking.current = false;
-      setCursorCoords((prev) => ({ ...prev, [idx]: { x, y } }));
+      // Position via transform (compositor) not left/top (which repaints the
+      // large blurred glow region every frame). translate3d promotes a GPU layer.
+      const glow = glowRefs.current[idx];
+      if (glow) glow.style.transform = `translate3d(${x - 150}px, ${y - 150}px, 0)`;
+      const spark = sparkRefs.current[idx];
+      if (spark) spark.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     });
-  };
-
-  const handleRowClick = (idx: number) => {
-    setPulseRowIndex(idx);
-    setActiveIndex(idx);
-    setTimeout(() => {
-      setPulseRowIndex(null);
-    }, 650);
   };
 
   const activeSegmentIndex = hoveredIndex !== null ? hoveredIndex : activeIndex;
@@ -406,7 +255,7 @@ export const Services: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Master Double-Split Layout (Left: Row Accordion Lists | Right: Morphing WebGL Globe Canvas) */}
+        {/* Master Double-Split Layout (Left: Row Accordion Lists | Right: Rotating Gold Accent) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative pb-8 mt-4">
           
           {/* LEFT SECTION (Grows tracking line & houses service items) */}
@@ -432,7 +281,6 @@ export const Services: React.FC = () => {
                 const isActive = activeIndex === idx;
                 const isHovered = hoveredIndex === idx;
                 const isRowHover = rowHoveredMap[idx] || false;
-                const coords = cursorCoords[idx] || { x: 0, y: 0 };
 
                 return (
                   <motion.div
@@ -450,7 +298,7 @@ export const Services: React.FC = () => {
                       setRowHoveredMap((prev) => ({ ...prev, [idx]: false }));
                     }}
                     onMouseMove={(e) => handleRowMouseMove(idx, e)}
-                    className={`relative z-10 ml-10 md:ml-14 rounded-xl border transition-all duration-300 overflow-hidden cursor-pointer ${
+                    className={`relative z-10 ml-10 md:ml-14 rounded-xl border transition-colors duration-300 overflow-hidden cursor-pointer [contain:content] ${
                       isActive 
                         ? "bg-[#0b0b0d] border-[#d4a02a]/25 shadow-[0_0_24px_rgba(212,160,42,0.04)]" 
                         : "bg-stone-900/30 border-white/5 hover:border-[#caa260]/18"
@@ -460,58 +308,44 @@ export const Services: React.FC = () => {
                     {/* Spotlight Glass Sweep that follows pointer hover locally */}
                     {isRowHover && (
                       <div
-                        className="absolute pointer-events-none rounded-full bg-[radial-gradient(circle_at_center,rgba(212,160,42,0.07)_0%,transparent_68%)] blur-[25px] transition-opacity duration-300"
+                        ref={(el) => { glowRefs.current[idx] = el; }}
+                        className="absolute left-0 top-0 pointer-events-none rounded-full bg-[radial-gradient(circle_at_center,rgba(212,160,42,0.07)_0%,transparent_68%)] blur-[18px] will-change-transform"
                         style={{
-                          width: "360px",
-                          height: "360px",
-                          left: `${coords.x - 180}px`,
-                          top: `${coords.y - 180}px`,
+                          width: "300px",
+                          height: "300px",
+                          transform: "translate3d(-9999px, -9999px, 0)",
                         }}
                       />
                     )}
 
                     {/* Highly discreet micro-interactive gold ripple Spark inside spotlight bounds */}
                     {isRowHover && (
-                      <div 
-                        className="absolute w-1.5 h-1.5 rounded-full bg-[#ffd900] blur-[1px] pointer-events-none mix-blend-screen opacity-40 shadow-[0_0_8px_#ffd900]"
+                      <div
+                        ref={(el) => { sparkRefs.current[idx] = el; }}
+                        className="absolute left-0 top-0 w-1.5 h-1.5 rounded-full bg-[#ffd900] blur-[1px] pointer-events-none mix-blend-screen opacity-40 shadow-[0_0_8px_#ffd900] will-change-transform"
                         style={{
-                          left: `${coords.x}px`,
-                          top: `${coords.y}px`,
-                          transition: "left 0.15s ease-out, top 0.15s ease-out"
+                          transform: "translate3d(-9999px, -9999px, 0)",
+                          transition: "transform 0.15s ease-out"
                         }}
-                      />
-                    )}
-
-                    {/* Clicking Sweep Pulse Line Overlay */}
-                    {pulseRowIndex === idx && (
-                      <motion.div
-                        initial={{ x: "-100%" }}
-                        animate={{ x: "100%" }}
-                        transition={{ duration: 0.65, ease: "easeOut" }}
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ffd900]/15 to-transparent pointer-events-none z-10"
                       />
                     )}
 
                     {/* Gold left-edge sweep gradient strip */}
                     <div className={`absolute top-0 left-0 h-full w-[4px] bg-gradient-to-b from-[#ffd900] via-[#d4a02a] to-transparent transition-transform duration-300 origin-top z-20 ${isHovered || isActive ? "scale-y-100" : "scale-y-0"}`} />
 
-                    {/* Main Row Block Header */}
-                    <div 
-                      className="flex items-center justify-between p-5 md:p-6 select-none relative z-10 transition-all duration-300"
-                      style={{ paddingLeft: isHovered || isActive ? "34px" : "24px" }}
-                    >
+                    {/* Main Row Block Header — fixed padding; the slide-in below is
+                        a composited transform (animating paddingLeft would reflow). */}
+                    <div className="flex items-center justify-between p-5 md:p-6 pl-7 select-none relative z-10">
                       
                       <div className="flex items-center gap-5 md:gap-6 min-w-0 transition-transform duration-300" style={{ transform: isHovered || isActive ? "translateX(6px)" : "translateX(0px)" }}>
-                        {/* Brighter index on hover with vertical pulse */}
-                        <motion.span 
-                          animate={isHovered || isActive ? { scale: [1, 1.14, 1] } : {}}
-                          transition={{ duration: 0.55 }}
-                          className={`font-mono text-sm md:text-base font-bold transition-colors duration-300 ${
-                            isHovered || isActive ? "text-[#ffd900]" : "text-[#caa260]/60"
+                        {/* Brighter index on hover — CSS scale/color transition (no JS) */}
+                        <span
+                          className={`font-mono text-sm md:text-base font-bold transition-all duration-300 will-change-transform inline-block ${
+                            isHovered || isActive ? "text-[#ffd900] scale-110" : "text-[#caa260]/60 scale-100"
                           }`}
                         >
                           {srv.index}
-                        </motion.span>
+                        </span>
                         
                         <span className={`text-lg md:text-xl font-display font-semibold transition-colors duration-300 tracking-tight ${
                           isHovered || isActive ? "text-[#ffd900]" : "text-white"
@@ -520,30 +354,32 @@ export const Services: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Sliding right Arrow transition with -45 degree rotation */}
-                      <motion.div
-                        animate={{ 
-                          x: isHovered || isActive ? 8 : 0,
-                          rotate: isHovered || isActive ? -45 : 0
-                        }}
-                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                        className={`transition-colors duration-300 ${
-                          isHovered || isActive ? "text-[#ffd900] drop-shadow-[0_0_6px_#ffd900]" : "text-stone-500"
+                      {/* Sliding right Arrow with -45deg rotation — CSS transform (no JS) */}
+                      <div
+                        className={`transition-all duration-300 ease-out will-change-transform ${
+                          isHovered || isActive
+                            ? "text-[#ffd900] drop-shadow-[0_0_6px_#ffd900] translate-x-2 -rotate-45"
+                            : "text-stone-500 translate-x-0 rotate-0"
                         }`}
                       >
                         <Icon name="ArrowRight" size={18} />
-                      </motion.div>
+                      </div>
                     </div>
 
-                    {/* EXPANDED DETAIL AKORDION PANEL (Smooth height extension, no layout jump) */}
-                    <AnimatePresence initial={false}>
-                      {isActive && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
-                          className="overflow-hidden border-t border-white/[0.04] bg-[#0c0c0e]/85"
+                    {/* EXPANDED DETAIL ACCORDION PANEL — height snaps via grid-rows
+                        (0fr/1fr) in a single reflow; the content reveal is a composited
+                        opacity + translateY fade, so opening writes no per-frame layout. */}
+                    <div
+                      className="grid"
+                      style={{ gridTemplateRows: isActive ? "1fr" : "0fr" }}
+                    >
+                      <div className="overflow-hidden min-h-0">
+                        <div
+                          className="border-t border-white/[0.04] bg-[#0c0c0e]/85 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none"
+                          style={{
+                            opacity: isActive ? 1 : 0,
+                            transform: isActive ? "translateY(0)" : "translateY(-6px)",
+                          }}
                         >
                           <div className="p-6 md:p-7 relative select-text z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                             
@@ -585,9 +421,9 @@ export const Services: React.FC = () => {
                             </div>
 
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                        </div>
+                      </div>
+                    </div>
 
                   </motion.div>
                 );
@@ -596,22 +432,21 @@ export const Services: React.FC = () => {
 
           </div>
 
-          {/* RIGHT SECTION (Faint background custom morphing Three.js graphics) */}
+          {/* RIGHT SECTION (Faint rotating gold accent for the active service) */}
           <div className="lg:col-span-4 h-[450px] hidden lg:flex items-center justify-center pointer-events-none select-none">
-            
-            {/* Soft background golden aura surrounding the globe */}
+
+            {/* Soft background golden aura */}
             <div className="absolute w-[360px] h-[360px] rounded-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.06)_0%,transparent_70%)] blur-[40px]" />
-            
-            {/* Faint morphing wireframe shapes canvas system representing current service */}
-            <ServicesWebGLGlobe activeIndex={activeSegmentIndex} />
-            
+
+            <ServicesCSSAccent activeIndex={activeSegmentIndex} />
+
           </div>
 
         </div>
 
-        {/* Dynamic Mobile Background canvas fallback */}
-        <div className="absolute inset-0 block lg:hidden pointer-events-none opacity-20 z-0 select-none overflow-hidden h-[300px] sm:h-[400px] top-[20%]">
-          <ServicesWebGLGlobe activeIndex={activeSegmentIndex} />
+        {/* Mobile background accent — CSS only. */}
+        <div className="absolute inset-0 block lg:hidden pointer-events-none opacity-20 z-0 select-none overflow-hidden h-[300px] sm:h-[400px] top-[20%] flex items-center justify-center">
+          <ServicesCSSAccent activeIndex={activeSegmentIndex} />
         </div>
 
       </div>

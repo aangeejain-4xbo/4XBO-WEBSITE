@@ -181,6 +181,7 @@ export const ContactGlobe: React.FC = () => {
     const tmp = new THREE.Vector3();
     let lastTime = performance.now();
     let animId = 0;
+    let visible = true; // gated by the IntersectionObserver below
 
     const tick = () => {
       const _now = performance.now();
@@ -216,12 +217,30 @@ export const ContactGlobe: React.FC = () => {
       });
 
       renderer.render(scene, camera);
-      animId = requestAnimationFrame(tick);
+      if (visible) animId = requestAnimationFrame(tick);
     };
     tick();
 
+    // Pause the render loop while the globe is scrolled off-screen — no GPU
+    // work for an invisible canvas. Resume (without a dt jump) on re-entry.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !visible) {
+          visible = true;
+          lastTime = performance.now();
+          animId = requestAnimationFrame(tick);
+        } else if (!entry.isIntersecting && visible) {
+          visible = false;
+          cancelAnimationFrame(animId);
+        }
+      },
+      { threshold: 0 }
+    );
+    io.observe(container);
+
     return () => {
       cancelAnimationFrame(animId);
+      io.disconnect();
       ro.disconnect();
       container.removeEventListener("mousedown", mouseDown);
       window.removeEventListener("mousemove", mouseMove);

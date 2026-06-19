@@ -318,6 +318,8 @@ export default function App() {
     <div className="relative min-h-screen premium-fintech-bg text-stone-100 overflow-x-hidden font-sans selection:bg-gold-500/30 selection:text-white">
       {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
       <PageTransition />
+      {/* Lightweight cursor trail — shadowBlur removed + 1x canvas (the heavy
+          full-screen blur was the original site-wide hover-lag source). */}
       <CustomCursor />
       <TapRipple />
       {/* Dynamic Background Noise/Texture & Hardware-accelerated grids */}
@@ -357,38 +359,31 @@ export default function App() {
       {/* Footer */}
       <Footer onTalkClick={openTalkModal} />
 
-      {/* Persistent Gold-Accented Floating Action Button (FAB) */}
-      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center justify-center">
+      {/* Persistent Gold-Accented Floating WhatsApp Button (round, glowing) */}
+      <div className="fixed bottom-5 right-5 sm:bottom-7 sm:right-7 z-40 flex items-center justify-center group">
+        {/* Soft radial golden glow halo that bleeds outward (no hard box edge) */}
+        <div className="absolute h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(255,217,0,0.40)_0%,rgba(212,160,42,0.22)_38%,transparent_70%)] blur-xl pointer-events-none z-0 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+
         {/* Pulsing Backlight Ring 1 */}
         <motion.div
-          className="absolute h-14 w-14 rounded-full bg-gold-500/25 pointer-events-none z-0"
-          animate={{
-            scale: [1, 2.1, 1],
-            opacity: [0.6, 0, 0.6],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 2.5,
-            ease: "easeInOut",
-          }}
+          className="absolute h-16 w-16 rounded-full bg-gold-500/25 pointer-events-none z-0"
+          animate={{ scale: [1, 2.2, 1], opacity: [0.6, 0, 0.6] }}
+          transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
         />
 
         {/* Pulsing Backlight Ring 2 */}
         <motion.div
-          className="absolute h-14 w-14 rounded-full bg-gold-400/15 pointer-events-none z-0"
-          animate={{
-            scale: [1, 1.6, 1],
-            opacity: [0.7, 0, 0.7],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 3,
-            ease: "easeInOut",
-            delay: 0.8,
-          }}
+          className="absolute h-16 w-16 rounded-full bg-gold-400/15 pointer-events-none z-0"
+          animate={{ scale: [1, 1.7, 1], opacity: [0.7, 0, 0.7] }}
+          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.8 }}
         />
 
-        {/* Floating Action Button Core (WhatsApp Premium) */}
+        {/* Hover tooltip label (sits to the left, doesn't box the button) */}
+        <span className="absolute right-[78px] hidden sm:block whitespace-nowrap px-3 py-1.5 rounded-lg bg-stone-950/90 border border-gold-400/40 text-gold-300 text-[11px] font-bold tracking-wider uppercase opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 pointer-events-none shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+          WhatsApp Us
+        </span>
+
+        {/* Round glowing button core */}
         <motion.a
           id="global-floating-contact-btn"
           href={WHATSAPP_URL}
@@ -397,39 +392,22 @@ export default function App() {
           aria-label="Contact 4X BackOffice on WhatsApp"
           initial={{ opacity: 0, scale: 0.75, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          whileHover="hover"
+          whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 20
-          }}
-          className="relative z-10 flex items-center gap-2 h-14 px-4 rounded-full bg-stone-950 border border-gold-400/80 text-gold-400 font-sans text-xs font-semibold tracking-wider uppercase shadow-[0_8px_30px_rgba(202,162,96,0.25)] hover:bg-gold-500 hover:text-stone-950 hover:border-gold-300 hover:shadow-[0_12px_40px_rgba(202,162,96,0.55)] cursor-pointer overflow-hidden group select-none transition-all duration-300"
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          className="relative z-10 flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-br from-gold-300 via-gold-400 to-gold-600 text-stone-950 border border-gold-200/60 shadow-[0_0_28px_rgba(255,217,0,0.55),0_8px_30px_rgba(202,162,96,0.45)] hover:shadow-[0_0_46px_rgba(255,217,0,0.85),0_12px_45px_rgba(202,162,96,0.7)] cursor-pointer overflow-hidden select-none transition-shadow duration-300"
         >
-          {/* Subtle inside-button wave reflection highlight */}
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+          {/* Subtle shine sweep across the button */}
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:animate-shimmer" />
 
-          {/* Centered WhatsApp icon with scale dynamic */}
+          {/* WhatsApp icon — large but fully visible & crisp (not clipped by the circle) */}
           <motion.div
-            variants={{
-              hover: { rotate: [0, -10, 10, -5, 5, 0] }
-            }}
+            whileHover={{ rotate: [0, -10, 10, -5, 5, 0] }}
             transition={{ duration: 0.5 }}
+            className="relative z-10 flex items-center justify-center"
           >
-            <Icon name="WhatsApp" size={18} className="text-current" />
+            <Icon name="WhatsApp" size={40} className="text-current" />
           </motion.div>
-
-          {/* Smooth Slider label expand layout */}
-          <motion.span
-            variants={{
-              hover: { width: "auto", opacity: 1, marginRight: 4 },
-            }}
-            initial={{ width: 0, opacity: 0, marginRight: 0 }}
-            className="overflow-hidden whitespace-nowrap inline-block text-[11px] font-bold"
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          >
-            WhatsApp Us
-          </motion.span>
         </motion.a>
       </div>
 

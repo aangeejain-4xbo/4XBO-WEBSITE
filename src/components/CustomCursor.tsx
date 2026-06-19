@@ -11,6 +11,7 @@ export const CustomCursor: React.FC = () => {
   const pointsRef = useRef<{ x: number; y: number }[]>([]);
   const isHoveringRef = useRef(false);
   const isVisibleRef = useRef(false);
+  const isClickedRef = useRef(false);
 
   const numPoints = 20; // Silky smooth segmented trailing chain
   const lagFactor = 0.28; // The damping speed of trail interpolation (creates the "delay" inertia)
@@ -46,8 +47,8 @@ export const CustomCursor: React.FC = () => {
       }
     };
 
-    const handleMouseDown = () => setIsClicked(true);
-    const handleMouseUp = () => setIsClicked(false);
+    const handleMouseDown = () => { isClickedRef.current = true; setIsClicked(true); };
+    const handleMouseUp = () => { isClickedRef.current = false; setIsClicked(false); };
     const handleMouseLeave = () => {
       isVisibleRef.current = false;
       setIsVisible(false);
@@ -61,14 +62,13 @@ export const CustomCursor: React.FC = () => {
     const resizeCanvas = () => {
       const canvas = canvasRef.current;
       if (canvas) {
-        canvas.width = window.innerWidth * window.devicePixelRatio;
-        canvas.height = window.innerHeight * window.devicePixelRatio;
+        // Render the full-screen trail at 1x, not devicePixelRatio. At 2x retina
+        // this canvas would have to fill 4x the pixels every frame for a faint
+        // decorative trail — a major paint cost. 1x is visually fine here.
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         canvas.style.width = `${window.innerWidth}px`;
         canvas.style.height = `${window.innerHeight}px`;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-        }
       }
     };
 
@@ -136,7 +136,7 @@ export const CustomCursor: React.FC = () => {
         );
         
         // Gold / Amber color profiles to match branding
-        gradient.addColorStop(0, isClicked ? "rgba(220, 160, 42, 0.72)" : (isHoveringRef.current ? "rgba(255, 215, 0, 0.55)" : "rgba(202, 162, 96, 0.38)"));
+        gradient.addColorStop(0, isClickedRef.current ? "rgba(220, 160, 42, 0.72)" : (isHoveringRef.current ? "rgba(255, 215, 0, 0.55)" : "rgba(202, 162, 96, 0.38)"));
         gradient.addColorStop(0.5, "rgba(202, 162, 96, 0.18)");
         gradient.addColorStop(1, "rgba(202, 162, 96, 0.0)");
 
@@ -144,13 +144,9 @@ export const CustomCursor: React.FC = () => {
         ctx.lineWidth = isHoveringRef.current ? 4.5 : 2.5;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        
-        // Add subtle shadow to line to enhance the glowing neon feel
-        ctx.shadowBlur = isHoveringRef.current ? 15 : 6;
-        ctx.shadowColor = "rgba(202, 162, 96, 0.25)";
-        
+        // No ctx.shadowBlur — it's the most expensive Canvas 2D op and was
+        // running full-screen every frame. The gradient stroke carries the glow.
         ctx.stroke();
-        ctx.shadowBlur = 0; // Reset shadow
 
         // 3. Render floating glow nodes (Lag layers)
         // We draw individual circle segments at specific intervals of the trail chain
@@ -164,12 +160,9 @@ export const CustomCursor: React.FC = () => {
           if (index === 0) {
             // Draw central target dot
             ctx.beginPath();
-            ctx.arc(point.x, point.y, isClicked ? 1.5 : 2.5, 0, Math.PI * 2);
+            ctx.arc(point.x, point.y, isClickedRef.current ? 1.5 : 2.5, 0, Math.PI * 2);
             ctx.fillStyle = "#E6C17A";
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "#caa260";
             ctx.fill();
-            ctx.shadowBlur = 0;
             return;
           }
 
@@ -198,7 +191,7 @@ export const CustomCursor: React.FC = () => {
       document.removeEventListener("mouseenter", handleMouseEnter);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isClicked, numPoints]);
+  }, [numPoints]);
 
   return (
     <>

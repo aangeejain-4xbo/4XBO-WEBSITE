@@ -1,6 +1,5 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { Icon } from "./Icon";
 import { useRouter } from "../router";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { waLink, WA_CONSULT_MSG } from "../config";
@@ -15,34 +14,19 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
-  const [particlesAssembled, setParticlesAssembled] = useState(true);
-  const [activeSystemMode, setActiveSystemMode] = useState<"hero" | "infrastructure" | "trading" | "liquidity" | "risk">("hero");
-
-  const systemModes = [
-    { mode: "hero", label: "Unified Core", icon: "Layers", desc: "Total synchronization engine core" },
-    { mode: "trading", label: "MT5 Admin", icon: "Cpu", desc: "Orchestrated performance & config" },
-    { mode: "liquidity", label: "Smart Routing", icon: "GitMerge", desc: "PrimeXM & Centroid sub-ms bridges" },
-    { mode: "risk", label: "Risk Shield", icon: "ShieldAlert", desc: "Perimeter DDoS protection & defense" }
-  ] as const;
+  // Both are effectively constant — the setters were never wired up.
+  const [particlesAssembled] = useState(true);
+  const [activeSystemMode] = useState<"hero" | "infrastructure" | "trading" | "liquidity" | "risk">("hero");
 
   const { navigate } = useRouter();
 
   // Hook into the page scroll progress using useScroll the user requested
   const { scrollYProgress } = useScroll();
-  // Map scroll progress to background elements opacity
-  const backgroundOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0.12]);
   const heroGlobeOpacity = useTransform(scrollYProgress, [0, 0.28], [0.85, 0]);
   // Cinematic scroll: zoom into the core while the headline lifts away and fades.
   const heroGlobeScale = useTransform(scrollYProgress, [0, 0.25], [1, 2.3]);
   const heroContentY = useTransform(scrollYProgress, [0, 0.15], [0, -130]);
   const heroContentOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
-
-  const statusModules = [
-    { title: "99.99% Uptime", desc: "Core Latency <0.1ms", position: "md:absolute md:top-[20%] md:left-4 lg:left-12 xl:left-20" },
-    { title: "24/7 Support", desc: "Engineer On-Call SLA", position: "md:absolute md:bottom-[15%] md:left-4 lg:left-12 xl:left-20" },
-    { title: "Risk Protected", desc: "Shield Aggregation", position: "md:absolute md:top-[20%] md:right-4 lg:right-12 xl:right-20" },
-    { title: "MT5 Online", desc: "NY4 & LD4 Bridges", position: "md:absolute md:bottom-[15%] md:right-4 lg:right-12 xl:right-20" },
-  ];
 
   // Cinematic staggered animation timelines matching luxury motion curves
   const containerVariants = {

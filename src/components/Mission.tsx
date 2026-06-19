@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Icon } from "./Icon";
 import { TRANSITIONS, ANIMATION_VARIANTS } from "../lib/animations";
 
 export const Mission: React.FC = () => {

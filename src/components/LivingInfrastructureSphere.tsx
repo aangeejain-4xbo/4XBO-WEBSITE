@@ -280,9 +280,11 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
     let intro = 0;
     const startTime = performance.now();
     let frameId: number;
+    let visible = true; // toggled by the IntersectionObserver below
 
     const animateScene = () => {
       frameId = requestAnimationFrame(animateScene);
+      if (!visible) return; // skip particle sim + GPU render while off-screen
       const time = (performance.now() - startTime) / 1000;
 
       if (intro < 1) {
@@ -355,8 +357,17 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
 
     animateScene();
 
+    // Skip the particle sim + GPU render while the hero canvas is scrolled
+    // off-screen (site-wide perf). The loop stays alive; it just no-ops hidden.
+    const visObserver = new IntersectionObserver(
+      ([entry]) => { visible = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    visObserver.observe(canvas);
+
     return () => {
       cancelAnimationFrame(frameId);
+      visObserver.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);
       
       if (parentContainer) {
@@ -391,7 +402,6 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
   const connections = useRef<Connection[]>([]);
   const coreWaveRadius = useRef<number>(0);
   const rotationAngle = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const isHoveredNode = useRef<number | null>(null);
 
   // Mouse interaction offsets for smooth interactive tilting parallax
   const mouseOffset = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -613,9 +623,16 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
     // Initial transition/entrance pop-out trigger when state loads
     triggerBurst(0.75);
 
+    let visible = true; // toggled by the IntersectionObserver below
+
     const render = () => {
+      // Skip all 2D drawing while scrolled off-screen; keep the loop alive.
+      if (!visible) {
+        animationFrameId.current = requestAnimationFrame(render);
+        return;
+      }
       t += 1;
-      
+
       // Clear with elegant premium dark transparent backdrop
       ctx.clearRect(0, 0, size, size);
 
@@ -645,9 +662,6 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
             flareIntensity = Math.exp(-(currentFlareIndex - 20) * 0.045); // smooth exponential settle
           }
         }
-
-        // Pulsing and ring brightness factor
-        const ringFade = 1.0 + flareIntensity * 0.7;
 
         // --- 2. DRAW CENTRAL RADIAL BACKGROUND GLOW ---
         // Keeps the gorgeous soft gold backlight behind the main text.
@@ -1053,7 +1067,6 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
         const numStreams = 3;
 
         for (let i = 0; i < numStreams; i++) {
-          const angle = -0.3 + i * 0.3;
           const endX = centerX + 230;
           const endY = centerY + (i - 1) * 70;
           const progress = (t * 0.02 + i * 0.33) % 1;
@@ -1091,7 +1104,6 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
       // --- 7. Draw Major Core Infrastructure Nodes ---
       majorNodes.current.forEach((node, idx) => {
         const isFocused = idx === activeNodeIndex || activeMode === "unified";
-        const isHovered = isHoveredNode.current === idx;
 
         // Project node center
         const nx = node.projX;
@@ -1130,8 +1142,16 @@ export const LivingInfrastructureSphere: React.FC<LivingInfrastructureSphereProp
 
     render();
 
+    // Pause the 2D render loop while the canvas is scrolled off-screen.
+    const visObserver = new IntersectionObserver(
+      ([entry]) => { visible = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    visObserver.observe(canvas);
+
     return () => {
       canvas.removeEventListener("click", handleCanvasClick);
+      visObserver.disconnect();
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }

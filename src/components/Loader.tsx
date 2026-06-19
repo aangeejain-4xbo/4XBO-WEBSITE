@@ -44,7 +44,6 @@ export const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
             return 100;
           }
           // Dynamic increment size for realistic feel
-          const remainder = 100 - prev;
           const jump = Math.max(4, Math.min(14, Math.floor(Math.random() * 16)));
           return prev + jump > 100 ? 100 : prev + jump;
         });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { Icon } from "./Icon";
 import { SpotlightCard } from "./SpotlightCard";
 import { ScrollReveal3D } from "./ScrollReveal3D";
@@ -488,24 +488,24 @@ export const SEOSections: React.FC<SEOSectionsProps> = ({ onTalkClick }) => {
                     </motion.div>
                   </button>
 
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{
-                          height: { duration: 0.45, ease: [0.4, 0, 0.2, 1] },
-                          opacity: { duration: 0.35, ease: "easeInOut" },
+                  {/* Answer panel — height snaps via grid-rows in one reflow; the
+                      reveal is a composited opacity/transform fade (no per-frame layout). */}
+                  <div
+                    className="grid relative z-10"
+                    style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+                  >
+                    <div className="overflow-hidden min-h-0">
+                      <div
+                        className="px-6 pb-6 text-stone-350 font-sans font-light text-xs sm:text-sm leading-relaxed border-t border-white/[0.03] pt-4 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none"
+                        style={{
+                          opacity: isOpen ? 1 : 0,
+                          transform: isOpen ? "translateY(0)" : "translateY(-6px)",
                         }}
-                        className="overflow-hidden relative z-10"
                       >
-                        <div className="px-6 pb-6 text-stone-350 font-sans font-light text-xs sm:text-sm leading-relaxed border-t border-white/[0.03] pt-4 transition-colors">
-                          {item.answer}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                        {item.answer}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               );
             })}
