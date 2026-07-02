@@ -1,11 +1,10 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import dotenv from "dotenv";
 import { ROUTES, renderHeadTags } from "./src/seo";
 
-// Load environment variables
-dotenv.config();
+// Env vars (NODE_ENV, PORT) come from the real environment — PM2's ecosystem
+// config in prod, the shell in dev. No .env file is used (dotenv removed).
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3535", 10);

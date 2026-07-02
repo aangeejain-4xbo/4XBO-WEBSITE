@@ -52,13 +52,14 @@ export const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
 
     startProgress();
 
-    // Safety fallback timeout
+    // Safety fallback timeout — hard cap so the loader can never hold the
+    // site hostage for more than ~1.4s even if the interval misbehaves.
     safetyTimeout = setTimeout(() => {
       clearInterval(progressInterval);
       setProgress(100);
       setIsVisible(false);
       setTimeout(onComplete, 350);
-    }, 2500);
+    }, 1400);
 
     return () => {
       clearInterval(progressInterval);

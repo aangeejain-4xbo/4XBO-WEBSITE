@@ -62,26 +62,41 @@ export const CtaBand: React.FC<CtaBandProps> = ({ onTalkClick }) => {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
-        ctx.shadowColor = "rgba(212, 175, 55, 0.4)";
-        ctx.shadowBlur = 4;
         ctx.fill();
       }
     }
 
     const particlesList: GoldParticle[] = Array.from({ length: 30 }, () => new GoldParticle());
 
+    let visible = true; // toggled by the IntersectionObserver below
+
     const drawLoop = () => {
+      iframeId = requestAnimationFrame(drawLoop);
+      if (!visible) return; // skip sim + paint while the band is off-screen
       ctx.clearRect(0, 0, width, height);
+      // Shadow state is set once per frame, not per particle — identical glow,
+      // far fewer canvas state changes.
+      ctx.shadowColor = "rgba(212, 175, 55, 0.4)";
+      ctx.shadowBlur = 4;
       particlesList.forEach((p) => {
         p.update();
         p.draw();
       });
-      iframeId = requestAnimationFrame(drawLoop);
+      ctx.shadowBlur = 0;
     };
     drawLoop();
 
+    // Pause the particle loop while the CTA band is scrolled off-screen —
+    // it lives at the bottom of the home page, so this is most of the time.
+    const visObserver = new IntersectionObserver(
+      ([entry]) => { visible = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    visObserver.observe(canvas);
+
     return () => {
       window.removeEventListener("resize", handleResize);
+      visObserver.disconnect();
       cancelAnimationFrame(iframeId);
     };
   }, []);

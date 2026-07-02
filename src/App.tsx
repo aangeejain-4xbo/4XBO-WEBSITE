@@ -28,7 +28,24 @@ import { getRouteSeo, canonicalFor, buildGraph } from "./seo";
 
 export default function App() {
   const [isTalkOpen, setIsTalkOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // Branded loader runs only on the first visit of a browser session — repeat
+  // entries (back-button, shared links, re-opens in the same tab session) go
+  // straight to content instead of replaying the fake progress sequence.
+  const [isLoading, setIsLoading] = useState(() => {
+    try {
+      return window.sessionStorage.getItem("4xbo:visited") !== "1";
+    } catch {
+      return true;
+    }
+  });
+  const handleLoaderComplete = React.useCallback(() => {
+    try {
+      window.sessionStorage.setItem("4xbo:visited", "1");
+    } catch {
+      /* storage blocked (private mode) — loader just replays next load */
+    }
+    setIsLoading(false);
+  }, []);
   const { currentPath, navigate } = useRouter();
   // Render route content at deferred (non-blocking) priority so mounting a heavy
   // page (3D scenes, etc.) doesn't stall the curtain transition's animation frames.
@@ -122,18 +139,26 @@ export default function App() {
     };
   }, [currentPath, isLoading]); // Re-evaluate upon route change or loader completion
 
-  // Parallax Ambient Lines scroll movement listener
+  // Parallax Ambient Lines scroll movement listener.
+  // Lazily query .ambient (only /why-us has one) and cache the result, instead
+  // of a fresh document-wide querySelectorAll on every scroll event site-wide.
+  // The cache resets on route change; the lazy lookup inside the handler copes
+  // with AnimatePresence mounting the new page after its exit animation.
   React.useEffect(() => {
+    let ambients: HTMLElement[] | null = null;
     const handleScroll = () => {
+      if (!ambients || ambients.length === 0) {
+        ambients = Array.from(document.querySelectorAll<HTMLElement>(".ambient"));
+        if (ambients.length === 0) return;
+      }
       const scrollY = window.scrollY;
-      const ambients = document.querySelectorAll<HTMLElement>(".ambient");
       ambients.forEach((el) => {
         el.style.transform = `translateY(${scrollY * 0.04}px)`;
       });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [currentPath]); // reset the cached lookup when the route changes
 
   // Hook into viewport scroll progress
   const { scrollYProgress } = useScroll();
@@ -316,7 +341,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen premium-fintech-bg text-stone-100 overflow-x-hidden font-sans selection:bg-gold-500/30 selection:text-white">
-      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
+      {isLoading && <Loader onComplete={handleLoaderComplete} />}
       <PageTransition />
       {/* Lightweight cursor trail — shadowBlur removed + 1x canvas (the heavy
           full-screen blur was the original site-wide hover-lag source). */}

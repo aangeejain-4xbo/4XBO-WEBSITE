@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRouter } from "../router";
 import { ErrorBoundary } from "./ErrorBoundary";
@@ -14,10 +14,6 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
-  // Both are effectively constant — the setters were never wired up.
-  const [particlesAssembled] = useState(true);
-  const [activeSystemMode] = useState<"hero" | "infrastructure" | "trading" | "liquidity" | "risk">("hero");
-
   const { navigate } = useRouter();
 
   // Hook into the page scroll progress using useScroll the user requested
@@ -199,7 +195,7 @@ export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
           <Suspense fallback={null}>
             {/* Mobile-only: enlarge the globe 50%. Desktop (md+) stays scale-100, unchanged. */}
             <div className="scale-150 md:scale-100">
-              <LivingInfrastructureSphere activeMode={activeSystemMode} size={820} />
+              <LivingInfrastructureSphere size={820} />
             </div>
           </Suspense>
         </ErrorBoundary>
@@ -213,7 +209,7 @@ export const Hero: React.FC<HeroProps> = ({ onTalkClick }) => {
         
         <motion.div
           initial="hidden"
-          animate={particlesAssembled ? "visible" : "hidden"}
+          animate="visible"
           variants={containerVariants}
           className="flex flex-col items-center justify-center w-full"
           style={{ transformStyle: "preserve-3d" }}

@@ -21,25 +21,9 @@ export const ANIMATION_VARIANTS = {
     hidden: { opacity: 0, rotateX: 15, y: 40 },
     visible: { opacity: 1, rotateX: 0, y: 0 },
   },
-  button: {
-    hidden: { opacity: 0, rotateX: 20, y: 30 },
-    visible: { opacity: 1, rotateX: 0, y: 0 },
-  },
   card: {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 },
-  },
-  heroZoomOut: {
-    hidden: { opacity: 0, scale: 1.15, y: 30 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.16, 1, 0.3, 1] as const,
-      }
-    }
   },
   ctaZoomOut: {
     hidden: { opacity: 0, scale: 1.08, y: 20 },
@@ -53,9 +37,4 @@ export const ANIMATION_VARIANTS = {
       }
     }
   }
-};
-
-export const POST_REVEAL = {
-  animate: { y: 0 },
-  transition: { duration: 0 }
 };

@@ -16,10 +16,12 @@ npm run dev          # tsx server.ts — Express + Vite middleware on http://loc
 npm run build        # vite build (client → dist/) + esbuild bundles server.ts → dist/server.cjs
 npm start            # node dist/server.cjs — serves prebuilt dist/ as a static SPA
 npm run lint         # tsc --noEmit (type-check only; no ESLint configured)
-npm run clean        # rm -rf dist server.js  (note: uses Unix rm; on Windows use Remove-Item)
+npm run clean        # node -e fs.rmSync('dist', …) — cross-platform removal of dist/
 ```
 
 There is **no test framework**. `npm run lint` (type-check) is the only automated check.
+
+The `name` in `package.json` is still `"react-example"` — an AI Studio scaffolding leftover, not a signal you're in the wrong repo. Don't rely on it to identify the project.
 
 Dev and prod both run through `server.ts`, which listens on `0.0.0.0:${PORT}` — default `3535`, overridable via the `PORT` env var (`parseInt(process.env.PORT || "3535")`). In dev it mounts Vite as middleware (`NODE_ENV !== "production"`); in prod it serves `dist/` statically with an SPA fallback to `index.html`. Running `vite` directly is not the intended workflow.
 
@@ -31,7 +33,7 @@ Dev and prod both run through `server.ts`, which listens on `0.0.0.0:${PORT}` �
 
 ## Architecture
 
-**Stack:** React 19 + TypeScript, Vite 6, Tailwind CSS v4 (via `@tailwindcss/vite`, configured in `vite.config.ts` — no `tailwind.config.js`), `motion` (Framer Motion) for animation, `three` + `@react-three/fiber`/`drei` for 3D, `lucide-react` for icons, Express on the server. Path alias `@/*` → repo root.
+**Stack:** React 19 + TypeScript, Vite 6, Tailwind CSS v4 (via `@tailwindcss/vite`, configured in `vite.config.ts` — no `tailwind.config.js`), `motion` (Framer Motion) for animation, raw `three` for 3D (no `@react-three/fiber`/`drei` — both were removed as unused), `lucide-react` for icons, Express on the server. Path alias `@/*` → repo root.
 
 **Entry point is `src/App.tsx`** (mounted by `src/main.tsx`, wrapped in `RouterProvider`). Note: the main app component lives at `src/App.tsx`, not the repo root.
 
@@ -54,13 +56,13 @@ There is **no contact-form API and no email sending.** All "contact" actions are
 - `tel:` dial (`CONSULTATION_PHONE`),
 - Gmail compose links (`DEMO_REQUEST_EMAIL`).
 
-`src/components/TalkModal.tsx` is a channel picker (WhatsApp / Call / Email), and `ContactSection.tsx` is a presentational card + 3D globe — neither POSTs anywhere. **To change the phone number, email, or WhatsApp messages, edit `src/config.ts`** (it updates everywhere). The `server.ts` file contains only the SEO routes and Vite/static serving — nothing else. (`secure_data/submissions.json` is an empty, unreferenced AI Studio leftover — there is no submission storage.)
+`src/components/TalkModal.tsx` is a channel picker (WhatsApp / Call / Email), and `ContactSection.tsx` is a presentational card + 3D globe — neither POSTs anywhere. **To change the phone number, email, or WhatsApp messages, edit `src/config.ts`** (it updates everywhere). The `server.ts` file contains only the SEO routes and Vite/static serving — nothing else. There is no submission storage.
 
 **3D views are wrapped in `src/components/ErrorBoundary.tsx`** (the Hero infrastructure sphere and the Contact globe) so a WebGL/Three.js failure degrades gracefully instead of blanking the page. Wrap any new Three.js component the same way.
 
 ## Environment
 
-`.env.example` and the SMTP / `GEMINI_API_KEY` / `APP_URL` variables in it are **AI Studio scaffolding leftovers and are not used** anywhere in the current source (there is no email or Gemini code). No `.env` is required to run the site.
+No `.env` file is used and `dotenv` was removed — `NODE_ENV`/`PORT` come from the real environment (PM2's `deploy/ecosystem.config.cjs` in prod, the shell in dev). The old AI Studio `.env.example` and `secure_data/` leftovers were deleted.
 
 `vite.config.ts` honors `DISABLE_HMR` (AI Studio sets it) to turn off HMR and file watching — leave that behavior alone.
 

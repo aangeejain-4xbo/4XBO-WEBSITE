@@ -1,17 +1,28 @@
-import React from "react";
-import { motion } from "motion/react";
+import React, { useRef } from "react";
+import { motion, useInView } from "motion/react";
 
 /**
  * Ambient section background.
  * (The old animated market trend-line chart was removed — replaced with a calm,
  * slow-drifting gold "aurora" glow over a faint dot grid for premium depth.)
+ *
+ * Perf: this is mounted in the Footer (every page) + Partners + Contact, and
+ * its infinite loops animate large blurred layers — expensive on mobile GPUs.
+ * The animated layers only render while the section is on-screen; offscreen
+ * they unmount (invisible either way), so phones stop paying for them.
  */
 export const AnimatedTrendBackground: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(containerRef);
+
   return (
     <div
+      ref={containerRef}
       className="absolute inset-0 overflow-hidden pointer-events-none"
       style={{ willChange: "transform", transform: "translateZ(0)" }}
     >
+      {inView && (
+      <>
       {/* Faint, slowly scrolling dot grid for subtle texture */}
       <motion.div
         animate={{ x: [0, -52] }}
@@ -41,6 +52,8 @@ export const AnimatedTrendBackground: React.FC = () => {
         transition={{ repeat: Infinity, ease: "easeInOut", duration: 26 }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-gold-300/[0.04] blur-[100px] pointer-events-none"
       />
+      </>
+      )}
     </div>
   );
 };

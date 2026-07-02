@@ -131,6 +131,10 @@ interface WhyUsProps {
 export const WhyUs: React.FC<WhyUsProps> = ({ onTalkClick }) => {
   const [activeIndex, setActiveIndex] = useState<number>(1); // Default center card (index 1: Seamless Trading Experience)
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  // Pause the auto-slide while the carousel is scrolled off-screen — no point
+  // re-rendering the card deck every 2s when the user can't see it.
+  const [isInView, setIsInView] = useState<boolean>(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const autoSlideTimer = useRef<NodeJS.Timeout | null>(null);
 
   const totalCards = whyUsData.length;
@@ -143,9 +147,21 @@ export const WhyUs: React.FC<WhyUsProps> = ({ onTalkClick }) => {
     setActiveIndex((prev) => (prev - 1 + totalCards) % totalCards);
   };
 
-  // Auto-slide effect
+  // Track carousel visibility so the auto-slide only runs on-screen.
   useEffect(() => {
-    if (!isHovered) {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-slide effect (unchanged cadence; paused on hover or off-screen)
+  useEffect(() => {
+    if (!isHovered && isInView) {
       autoSlideTimer.current = setInterval(() => {
         handleNext();
       }, 2000);
@@ -160,10 +176,10 @@ export const WhyUs: React.FC<WhyUsProps> = ({ onTalkClick }) => {
         clearInterval(autoSlideTimer.current);
       }
     };
-  }, [isHovered]);
+  }, [isHovered, isInView]);
 
   return (
-    <section id="why-us" className="relative py-24 bg-[#070707] overflow-hidden px-4 select-none">
+    <section ref={sectionRef} id="why-us" className="relative py-24 bg-[#070707] overflow-hidden px-4 select-none">
       {/* Parallax Ambient Lines */}
       <div className="ambient">
         <span className="gline" style={{ left: "15%", height: "100%", top: 0 }} />

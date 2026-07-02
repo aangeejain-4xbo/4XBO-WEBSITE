@@ -83,7 +83,12 @@ export const CustomCursor: React.FC = () => {
 
     // The high-frequency animation render loop for physics and trail rendering
     let animationFrameId: number;
-    
+    // State snapshot from the last painted frame — the idle skip below must
+    // not suppress repaints caused by hover/click/visibility changes.
+    let lastHover = false;
+    let lastClicked = false;
+    let lastVisible = false;
+
     const render = () => {
       const canvas = canvasRef.current;
       if (!canvas) {
@@ -96,6 +101,24 @@ export const CustomCursor: React.FC = () => {
         animationFrameId = requestAnimationFrame(render);
         return;
       }
+
+      // Idle skip: once the whole trail has converged onto the (stationary)
+      // cursor and no visual state changed, every subsequent frame paints
+      // identical pixels — skip the physics + repaint until something moves.
+      const tail = pointsRef.current[numPoints - 1];
+      const idleDx = mouseRef.current.x - tail.x;
+      const idleDy = mouseRef.current.y - tail.y;
+      const stateChanged =
+        lastHover !== isHoveringRef.current ||
+        lastClicked !== isClickedRef.current ||
+        lastVisible !== isVisibleRef.current;
+      if (!stateChanged && idleDx * idleDx + idleDy * idleDy < 0.04) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+      lastHover = isHoveringRef.current;
+      lastClicked = isClickedRef.current;
+      lastVisible = isVisibleRef.current;
 
       // 1. Physical Calculations for trailing layers
       // Interpolate the head (index 0) toward target cursor
